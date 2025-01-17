@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post("/add", addHistory);
 
-router.get("/find", getHistory);
+router.post("/find", getHistory);
 
 export default router;

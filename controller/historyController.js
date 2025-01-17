@@ -1,8 +1,8 @@
 import { History } from "../mongodb-connection.mjs";
 
 export const getHistory = async (req, res) => {
-  const { userId } = req.body;
-  const history = await History.find({ userId: String(userId) });
+  const { email } = req.body;
+  const history = await History.find({ email: String(email) });
   res.send(history);
 };
 
