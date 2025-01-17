@@ -1,7 +1,7 @@
 import express from "express";
-import connectDB from "./mongodb-connection.mjs";
-import historyRoutes from "./routes/history.js";
-import usersRoutes from "./routes/users.js";
+import connectDB from "../mongodb-connection.mjs";
+import historyRoutes from "../routes/history.js";
+import usersRoutes from "../routes/users.js";
 
 const app = express();
 
@@ -19,6 +19,10 @@ const connectionWrapper = (req, res, next) => {
 app.use(connectionWrapper);
 
 // Routes
+app.get("/", async (req, res) => {
+  res.send("Hello world")
+})
+
 app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
 
