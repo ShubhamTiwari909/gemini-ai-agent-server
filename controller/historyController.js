@@ -7,8 +7,8 @@ export const getHistory = async (req, res) => {
 };
 
 export const addHistory = async (req, res) => {
-  const { userId, prompt, response } = req.body;
-  const newHistory = new History({ userId, prompt, response });
+  const { historyId, email, prompt, response } = req.body;
+  const newHistory = new History({ historyId, email, prompt, response });
   const result = await newHistory.save();
   res.send(`History saved - ${result}`);
 };

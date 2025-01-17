@@ -1,27 +1,23 @@
 import express from "express";
-import connectDB from "../mongodb-connection.mjs";
 import historyRoutes from "../routes/history.js";
 import usersRoutes from "../routes/users.js";
+import cors from "cors";
+import { connectionWrapper } from "../middlewares/db-connection.js";
 
 const app = express();
 
-// Middleware to parse JSON
-app.use(express.json());
-const connection = await connectDB();
-
-const connectionWrapper = (req, res, next) => {
-  if (connection) {
-    next();
-  } else {
-    res.status(500).send("MongoDB Connection Failed!");
-  }
+const corsOptions = {
+  origin: ["http://localhost:3000", "https://gemini-ai-agent.vercel.app"],
 };
+// Middleware to parse JSON
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use(connectionWrapper);
 
 // Routes
 app.get("/", async (req, res) => {
-  res.send("Hello world")
-})
+  res.send("Hello world");
+});
 
 app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
@@ -33,4 +29,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-export default app
+export default app;

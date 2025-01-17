@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import 'dotenv/config'; // For ES Module
 
 const connectDB = async () => {
   try {
@@ -17,7 +18,8 @@ export const Users = mongoose.model("users", {
   email: String,
 });
 export const History = mongoose.model("histories", {
-  userId: String,
+  historyId: String,
+  email: String,
   prompt: String,
   response: String,
 });
