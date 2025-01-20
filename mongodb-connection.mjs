@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import 'dotenv/config'; // For ES Module
+import 'dotenv/config';
 
 const connectDB = async () => {
   try {

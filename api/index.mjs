@@ -2,9 +2,31 @@ import express from "express";
 import historyRoutes from "../routes/history.js";
 import usersRoutes from "../routes/users.js";
 import cors from "cors";
+import helmet from "helmet";
+import "dotenv/config";
 import { connectionWrapper } from "../middlewares/db-connection.js";
 
 const app = express();
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "default-src": ["'self'"], // Only allow resources from the same origin
+        "script-src": ["'self'", process.env.MONGO_DB_URI || ""], // Allow scripts from self and example.com (adjust as needed)
+        "style-src": ["'self'", "'unsafe-inline'"], // Allow styles from self.  'unsafe-inline' is generally discouraged but sometimes necessary (use sparingly!)
+        "img-src": ["'self'", "data:"], // Allow images from self and data URLs
+        "connect-src": ["'self'", process.env.MONGO_DB_URI || ""], // Allow connections to self and your API
+        "font-src": ["'self'"], // Allow fonts from self
+        "object-src": ["'none'"], // Disable embedded objects (Flash, etc.)
+        "base-uri": ["'self'"],
+        "form-action": ["'self'"],
+        "frame-ancestors": ["'none'"], // Prevents iframing your site
+        "upgrade-insecure-requests": ["'self'"],
+      },
+    },
+  })
+);
 
 const corsOptions = {
   origin: ["http://localhost:3000", "https://gemini-ai-agent.vercel.app"],
