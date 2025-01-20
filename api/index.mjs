@@ -34,6 +34,7 @@ const corsOptions = {
 // Middleware to parse JSON
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(connectionWrapper);
 
 // Routes
