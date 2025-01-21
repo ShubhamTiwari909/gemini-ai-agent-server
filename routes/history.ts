@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 import { addHistory, getHistory } from "../controller/historyController.js";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.post("/add", addHistory);
 

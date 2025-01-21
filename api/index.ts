@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Express, Request, Response } from "express";
 import historyRoutes from "../routes/history.js";
 import usersRoutes from "../routes/users.js";
 import cors from "cors";
@@ -6,7 +6,7 @@ import helmet from "helmet";
 import "dotenv/config";
 import { connectionWrapper } from "../middlewares/db-connection.js";
 
-const app = express();
+const app: Express = express();
 
 app.use(
   helmet({
@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(connectionWrapper);
 
 // Routes
-app.get("/", async (req, res) => {
+app.get("/", async (_: Request, res: Response) => {
   res.send("Hello world");
 });
 
@@ -46,7 +46,7 @@ app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
 
 // Start the server
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

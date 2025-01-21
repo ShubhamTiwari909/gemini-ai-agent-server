@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 import { addUser } from "../controller/usersController.js";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.post("/add", addUser);
 

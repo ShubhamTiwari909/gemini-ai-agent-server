@@ -32,13 +32,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(connectionWrapper);
 // Routes
-app.get("/", async (req, res) => {
+app.get("/", async (_, res) => {
     res.send("Hello world");
 });
 app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
 // Start the server
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
