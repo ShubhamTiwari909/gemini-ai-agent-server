@@ -1,4 +1,4 @@
-import { History } from "../mongodb-connection.mjs";
+import { History } from "../mongodb-connection.js";
 import "dotenv/config";
 import crypto from "crypto";
 // Encryption function

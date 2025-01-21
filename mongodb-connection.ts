@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import 'dotenv/config';
+import mongoose, { Schema } from "mongoose";
+import "dotenv/config";
 
 const connectDB = async () => {
   try {
@@ -12,16 +12,21 @@ const connectDB = async () => {
   }
 };
 
-export const Users = mongoose.model("users", {
+const userSchema = new mongoose.Schema({
   userId: String,
   name: String,
   email: String,
 });
-export const History = mongoose.model("histories", {
+
+export const Users = mongoose.model("users", userSchema);
+
+const historySchema = new mongoose.Schema({
   historyId: String,
   email: String,
   prompt: String,
   response: String,
 });
+
+export const History = mongoose.model("histories", historySchema);
 
 export default connectDB;
