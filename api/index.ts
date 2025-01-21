@@ -29,7 +29,7 @@ app.use(
 );
 
 const corsOptions = {
-  origin: [process.env.WHITELISTING_CSP_API],
+  origin: [process.env.WHITELISTING_CSP_API || ""],
 };
 // Middleware to parse JSON
 app.use(cors(corsOptions));
