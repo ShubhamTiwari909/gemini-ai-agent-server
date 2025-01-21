@@ -15,7 +15,6 @@ async function checkIfExists(email) {
 }
 export const addUser = async (req, res) => {
     const { userId, name, email } = req.body;
-    console.log(userId, name, email);
     if (!userId || !name || !email)
         return res
             .status(400)

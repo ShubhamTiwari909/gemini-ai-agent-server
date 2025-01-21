@@ -1,6 +1,7 @@
 import { Users } from "../mongodb-connection.js";
+import { Request, Response } from "express";
 
-async function checkIfExists(email) {
+async function checkIfExists(email:string) {
   try {
     const exists = await Users.exists({ email });
     if (exists) {
@@ -13,9 +14,8 @@ async function checkIfExists(email) {
   }
 }
 
-export const addUser = async (req, res) => {
+export const addUser = async (req: Request, res: Response) => {
   const { userId, name, email } = req.body;
-  console.log(userId, name, email);
   if (!userId || !name || !email)
     return res
       .status(400)
