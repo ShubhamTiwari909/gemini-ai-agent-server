@@ -2,6 +2,7 @@ import "dotenv/config";
 import crypto from "crypto";
 import { Request, Response } from "express";
 import { History } from "../mongodb-connection.js";
+import { compressBase64Image } from "../utils/image-compression.js";
 
 // Encryption function
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || ""; // REPLACE THIS!
@@ -43,6 +44,7 @@ export const getHistory = async (req: Request, res: Response) => {
       ...item.toObject(), // Convert Mongoose document to plain object
       prompt: decrypt(item?.prompt),
       response: decrypt(item?.response),
+      filePreview: decrypt(item?.filePreview),
     }));
     res.send(decryptedHistory);
   } catch (error) {
@@ -51,17 +53,25 @@ export const getHistory = async (req: Request, res: Response) => {
   }
 };
 
-export const addHistory = async (req:Request, res:Response) => {
-  const { historyId, email, prompt, response } = req.body;
+export const addHistory = async (req: Request, res: Response) => {
+  const { historyId, email, prompt, response, filePreview } = req.body;
   try {
+    let compressedImage;
+    if (!filePreview) {
+      compressedImage = "";
+    } else {
+      compressedImage = await compressBase64Image(filePreview);
+    }
     const encryptedPrompt = encrypt(prompt);
     const encryptedResponse = encrypt(response);
+    const encryptedFilePreview = encrypt(compressedImage);
 
     const newHistory = new History({
       historyId,
       email,
       prompt: encryptedPrompt,
       response: encryptedResponse,
+      filePreview: encryptedFilePreview,
     });
     const result = await newHistory.save();
     res.send(`History saved - ${result}`);

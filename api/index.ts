@@ -33,8 +33,8 @@ const corsOptions = {
 };
 // Middleware to parse JSON
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json({limit: "50mb"}));
+app.use(express.urlencoded({ extended: true, limit: "50mb" })); // for parsing application/x-www-form-urlencoded
 app.use(connectionWrapper);
 
 // Routes

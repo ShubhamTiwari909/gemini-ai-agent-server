@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/api/index.js",
-    "dev": "nodemon api/index.ts"
+    "dev": "npm run build && nodemon api/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +18,7 @@
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "mongoose": "^8.9.5",
+    "sharp": "^0.33.5",
     "vercel": "^39.3.0"
   },
   "devDependencies": {
