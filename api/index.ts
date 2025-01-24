@@ -5,6 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 import "dotenv/config";
 import { connectionWrapper } from "../middlewares/db-connection.js";
+import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 
 const app: Express = express();
 
@@ -31,11 +32,13 @@ app.use(
 const corsOptions = {
   origin: [process.env.WHITELISTING_CSP_API || ""],
 };
+
 // Middleware to parse JSON
 app.use(cors(corsOptions));
-app.use(express.json({limit: "50mb"}));
+app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" })); // for parsing application/x-www-form-urlencoded
 app.use(connectionWrapper);
+app.use(dynamicLimiter);
 
 // Routes
 app.get("/", async (_: Request, res: Response) => {
