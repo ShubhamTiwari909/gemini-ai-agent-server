@@ -6,6 +6,7 @@ import helmet from "helmet";
 import "dotenv/config";
 import { connectionWrapper } from "../middlewares/db-connection.js";
 import { dynamicLimiter } from "../middlewares/rate-limiting.js";
+import compression from "compression";
 const app = express();
 app.use(helmet({
     contentSecurityPolicy: {
@@ -33,6 +34,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" })); // for parsing application/x-www-form-urlencoded
 app.use(connectionWrapper);
 app.use(dynamicLimiter);
+app.use(compression());
 // Routes
 app.get("/", async (_, res) => {
     res.send("Hello world");
