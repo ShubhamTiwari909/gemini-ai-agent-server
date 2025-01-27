@@ -1,28 +1,17 @@
 import { Users } from "../schemas/User";
 async function checkIfExists(email) {
-    try {
-        const exists = await Users.exists({ email });
-        if (exists) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return !!(await Users.findOne({ email }).select('_id').lean());
 }
 export const addUser = async (req, res) => {
     const { userId, name, email } = req.body;
-    if (!userId || !name || !email)
-        return res
-            .status(400)
-            .send("Bad Request - userId, name and email is required");
-    if (await checkIfExists(email)) {
-        return res.status(200).send("User already exists");
+    if (!userId || !name || !email) {
+        return res.status(400).send("Bad Request - userId, name and email is required");
     }
     try {
+        const userExists = await checkIfExists(email);
+        if (userExists) {
+            return res.status(200).send("User already exists");
+        }
         const newUser = new Users({ userId, name, email });
         const result = await newUser.save();
         res.status(201).send(`User saved - ${result}`);
