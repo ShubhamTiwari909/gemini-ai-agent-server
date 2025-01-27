@@ -13,9 +13,4 @@ export const dynamicLimiter = () => rateLimit({
             message: "Too many requests, please try again later after 1 minute",
         });
     },
-    statusCode: 429,
-    standardHeaders: true,
-    validate: {
-        ip: true,
-    },
 });
