@@ -60,7 +60,6 @@ app.get("/", (req, res) => {
 });
 app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
-export default app;
+export default (req, res) => {
+    app(req, res);
+};
