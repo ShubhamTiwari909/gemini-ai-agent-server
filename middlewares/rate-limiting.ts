@@ -6,12 +6,17 @@ export const dynamicLimiter = rateLimit({
     if (process.env.MODE === "development") {
       return 1000; // Higher limit for development
     }
-    return 120; // Default limit for regular users
+    return 60; // Default limit for regular users
   },
   handler: (req, res, next) => {
     console.error(`Rate limit exceeded for IP: ${req.ip}`);
-    res
-      .status(429)
-      .json({ message: "Too many requests, please try again later after 1 minute" });
+    res.status(429).json({
+      message: "Too many requests, please try again later after 1 minute",
+    });
+  },
+  statusCode: 429,
+  standardHeaders: true,
+  validate: {
+    ip: true,
   },
 });
