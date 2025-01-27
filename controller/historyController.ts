@@ -39,17 +39,17 @@ function decrypt(text: string | undefined | null) {
 export const getHistory = async (req: Request, res: Response) => {
   const { email } = req.body;
   try {
-    const history = await History.find({ email })
+    const history = await History.find({ email }).lean();
     const decryptedHistory = history.map((item) => ({
-      ...item.toObject(),
+      ...item,
       prompt: decrypt(item?.prompt),
       response: decrypt(item?.response),
       filePreview: decrypt(item?.filePreview),
     }));
-    res.send(decryptedHistory); // Use json() instead of send() for sending JSON response
+    res.json(decryptedHistory); // Use json() instead of send() for sending JSON response
   } catch (error) {
     console.error("Error getting history:", error);
-    res.status(500).send("Error retrieving history");
+    res.status(500).json({ message: "Error retrieving history" }); // Send structured error response
   }
 };
 
@@ -57,23 +57,14 @@ export const addHistory = async (req: Request, res: Response) => {
   const { historyId, email, prompt, response, filePreview } = req.body;
 
   try {
-    let compressedImage;
-    if (!filePreview) {
-      compressedImage = "";
-    } else {
-      compressedImage = await compressBase64Image(filePreview);
-    }
-    const encryptedPrompt = encrypt(prompt);
-    const encryptedResponse = encrypt(response);
-    const encryptedFilePreview = encrypt(compressedImage);
+    const compressedImage = filePreview ? await compressBase64Image(filePreview) : "";
+    const [encryptedPrompt, encryptedResponse, encryptedFilePreview] = await Promise.all([
+      encrypt(prompt),
+      encrypt(response),
+      encrypt(compressedImage),
+    ]);
 
-    const newHistory = new History({
-      historyId,
-      email,
-      prompt: encryptedPrompt,
-      response: encryptedResponse,
-      filePreview: encryptedFilePreview,
-    });
+    const newHistory = new History({ historyId, email, prompt: encryptedPrompt, response: encryptedResponse, filePreview: encryptedFilePreview });
     const result = await newHistory.save();
     res.send(`History saved - ${result}`);
   } catch (error) {

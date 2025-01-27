@@ -2,16 +2,7 @@ import { Request, Response } from "express";
 import { Users } from "../schemas/Users.js";
 
 async function checkIfExists(email: string) {
-  try {
-    const exists = await Users.exists({ email });
-    if (exists) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (err) {
-    console.error(err);
-  }
+  return !!(await Users.findOne({ email }).select('_id').lean());
 }
 
 export const addUser = async (req: Request, res: Response) => {

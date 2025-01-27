@@ -1,17 +1,6 @@
 import { Users } from "../schemas/Users.js";
 async function checkIfExists(email) {
-    try {
-        const exists = await Users.exists({ email });
-        if (exists) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    catch (err) {
-        console.error(err);
-    }
+    return !!(await Users.findOne({ email }).select('_id').lean());
 }
 export const addUser = async (req, res) => {
     const { userId, name, email } = req.body;
