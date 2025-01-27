@@ -25,7 +25,7 @@ app.use(helmet({
     },
 }));
 const corsOptions = {
-    origin: [process.env.WHITELISTING_CSP_API || "", "https://gemini-ai-agent.vercel.app/"],
+    origin: [process.env.WHITELISTING_CSP_API || ""],
 };
 // Middleware to parse JSON
 app.use(cors(corsOptions));
