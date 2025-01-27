@@ -61,8 +61,7 @@
 // export default app;
 
 import express, { Express, Request, Response } from "express";
-import { VercelRequest, VercelResponse } from "@vercel/node";
-import historyRoutes from "../routes/history.js";
+// import historyRoutes from "../routes/history.js";
 import usersRoutes from "../routes/users.js";
 
 const app: Express = express();
@@ -72,9 +71,14 @@ app.get("/", (req: Request, res: Response) => {
   res.status(200).json("Welcome, your app is working well");
 });
 
-app.use("/history", historyRoutes);
-app.use("/users", usersRoutes);
+// app.use("/history", historyRoutes);
+app.use(
+  "/users",
+  usersRoutes
+);
 
-export default (req: VercelRequest, res: VercelResponse) => {
-  app(req, res);
-};
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
+export default app;

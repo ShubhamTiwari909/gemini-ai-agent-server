@@ -51,15 +51,16 @@
 // });
 // export default app;
 import express from "express";
-import historyRoutes from "../routes/history.js";
+// import historyRoutes from "../routes/history.js";
 import usersRoutes from "../routes/users.js";
 const app = express();
 const PORT = 4000;
 app.get("/", (req, res) => {
     res.status(200).json("Welcome, your app is working well");
 });
-app.use("/history", historyRoutes);
+// app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
-export default (req, res) => {
-    app(req, res);
-};
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
+export default app;
