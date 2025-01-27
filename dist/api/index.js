@@ -55,6 +55,7 @@ import express from "express";
 import usersRoutes from "../routes/users.js";
 const app = express();
 const PORT = 4000;
+app.use(express.json({ limit: "50mb" }));
 app.get("/", (req, res) => {
     res.status(200).json("Welcome, your app is working well");
 });

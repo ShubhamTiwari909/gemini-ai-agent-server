@@ -67,6 +67,9 @@ import usersRoutes from "../routes/users.js";
 const app: Express = express();
 const PORT = 4000;
 
+app.use(express.json({ limit: "50mb" }));
+
+
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json("Welcome, your app is working well");
 });
