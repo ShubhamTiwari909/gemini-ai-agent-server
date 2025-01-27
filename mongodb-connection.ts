@@ -12,22 +12,4 @@ const connectDB = async () => {
   }
 };
 
-const userSchema = new mongoose.Schema({
-  userId: String,
-  name: String,
-  email: String,
-});
-
-export const Users = mongoose.model("users", userSchema);
-
-const historySchema = new mongoose.Schema({
-  historyId: String,
-  email: String,
-  prompt: String,
-  response: String,
-  filePreview: String,
-});
-
-export const History = mongoose.model("histories", historySchema);
-
 export default connectDB;
