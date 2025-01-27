@@ -10,7 +10,7 @@ router.post("/add", dynamicLimiter(60), async (req, res, next) => {
         next(error);
     }
 });
-router.post("/find", dynamicLimiter(2), async (req, res, next) => {
+router.post("/find", dynamicLimiter(120), async (req, res, next) => {
     try {
         await getHistory(req, res);
     }

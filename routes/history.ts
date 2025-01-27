@@ -18,7 +18,7 @@ router.post(
 
 router.post(
   "/find",
-  dynamicLimiter(2),
+  dynamicLimiter(120),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await getHistory(req, res);
