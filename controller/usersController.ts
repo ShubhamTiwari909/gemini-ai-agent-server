@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Users } from "../schemas/User";
+import { Users } from "../mongodb-connection";
 
 async function checkIfExists(email: string) {
   return !!(await Users.findOne({ email }).select('_id').lean());

@@ -2,7 +2,7 @@ import "dotenv/config";
 import crypto from "crypto";
 import { Request, Response } from "express";
 import { compressBase64Image } from "../utils/image-compression.js";
-import { History } from "../schemas/History.js";
+import { History } from "../mongodb-connection.js";
 
 // Encryption function
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || ""; // REPLACE THIS!
