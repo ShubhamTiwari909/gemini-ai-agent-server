@@ -61,6 +61,7 @@
 // export default app;
 
 import express, { Express, Request, Response } from "express";
+import historyRoutes from "../routes/history.js";
 import usersRoutes from "../routes/users.js";
 
 const app: Express = express();
@@ -70,6 +71,7 @@ app.get("/", (req: Request, res: Response) => {
   res.status(200).json("Welcome, your app is working well");
 });
 
+app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
 
 app.listen(PORT, () => {
