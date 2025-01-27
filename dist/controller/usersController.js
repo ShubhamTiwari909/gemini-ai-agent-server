@@ -1,4 +1,4 @@
-import { Users } from "../mongodb-connection.js";
+import { Users } from "../schemas/Users.js";
 async function checkIfExists(email) {
     try {
         const exists = await Users.exists({ email });

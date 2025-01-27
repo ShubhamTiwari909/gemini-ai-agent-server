@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Users } from "../mongodb-connection.js";
+import { Users } from "../schemas/Users.js";
 
 async function checkIfExists(email: string) {
   try {

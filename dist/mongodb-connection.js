@@ -11,42 +11,4 @@ const connectDB = async () => {
         return mongoose.connection.readyState;
     }
 };
-const historySchema = new mongoose.Schema({
-    historyId: {
-        type: String,
-        unique: true,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    prompt: {
-        type: String,
-        required: true,
-    },
-    response: {
-        type: String,
-        required: true,
-    },
-    filePreview: String,
-});
-export const History = mongoose.model("histories", historySchema);
-const userSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        unique: true,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        unique: true,
-        required: true,
-    },
-});
-export const Users = mongoose.model("users", userSchema);
 export default connectDB;
