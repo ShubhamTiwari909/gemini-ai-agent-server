@@ -1,7 +1,8 @@
 import express from "express";
 import { addHistory, getHistory } from "../controller/historyController.js";
+import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 const router = express.Router();
-router.post("/add", async (req, res, next) => {
+router.post("/add", dynamicLimiter(60), async (req, res, next) => {
     try {
         await addHistory(req, res);
     }
@@ -9,7 +10,7 @@ router.post("/add", async (req, res, next) => {
         next(error);
     }
 });
-router.post("/find", async (req, res, next) => {
+router.post("/find", dynamicLimiter(2), async (req, res, next) => {
     try {
         await getHistory(req, res);
     }

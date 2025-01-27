@@ -38,7 +38,6 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" })); // for parsing application/x-www-form-urlencoded
 app.use((req, res, next) => connectionWrapper(req, res, next));
-app.use(dynamicLimiter());
 
 // Routes
 app.get("/", async (_: Request, res: Response) => {
