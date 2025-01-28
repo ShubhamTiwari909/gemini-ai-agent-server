@@ -95,7 +95,7 @@ export const addHistory = async (req: Request, res: Response) => {
       filePreview: encryptedFilePreview,
     });
     const result = await newHistory.save();
-    res.send(`History saved - ${result}`);
+    res.json({ newHistory: result });
   } catch (error) {
     console.error("Error adding history:", error);
     res.status(500).send("Error saving history");
