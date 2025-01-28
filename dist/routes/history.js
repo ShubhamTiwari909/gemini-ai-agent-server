@@ -1,5 +1,5 @@
 import express from "express";
-import { addHistory, getHistory } from "../controller/historyController.js";
+import { addHistory, getHistory, getHistoryById } from "../controller/historyController.js";
 import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 const router = express.Router();
 router.post("/add", dynamicLimiter(60), async (req, res, next) => {
@@ -13,6 +13,14 @@ router.post("/add", dynamicLimiter(60), async (req, res, next) => {
 router.post("/find", dynamicLimiter(120), async (req, res, next) => {
     try {
         await getHistory(req, res);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+router.post("/findById", dynamicLimiter(120), async (req, res, next) => {
+    try {
+        await getHistoryById(req, res);
     }
     catch (error) {
         next(error);
