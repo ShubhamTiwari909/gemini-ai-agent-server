@@ -32,6 +32,7 @@ export const getHistory = async (req, res) => {
             prompt: decrypt(item?.prompt),
             response: decrypt(item?.response),
             filePreview: decrypt(item?.filePreview),
+            createdAt: decrypt(item?.createdAt),
         }));
         res.json(decryptedHistory); // Use json() instead of send() for sending JSON response
     }
@@ -52,6 +53,7 @@ export const getHistoryById = async (req, res) => {
             prompt: decrypt(history?.prompt),
             response: decrypt(history?.response),
             filePreview: decrypt(history?.filePreview),
+            createdAt: decrypt(history?.createdAt),
         };
         res.json(decryptedHistory); // Use json() instead of send() for sending JSON response
     }
@@ -77,6 +79,7 @@ export const addHistory = async (req, res) => {
             prompt: encryptedPrompt,
             response: encryptedResponse,
             filePreview: encryptedFilePreview,
+            createdAt: encrypt(new Date().toISOString()),
         });
         const result = await newHistory.save();
         res.json({ newHistory: result });

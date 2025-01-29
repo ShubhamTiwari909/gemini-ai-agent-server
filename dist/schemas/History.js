@@ -18,5 +18,6 @@ const historySchema = new mongoose.Schema({
         required: true,
     },
     filePreview: String,
+    createdAt: String,
 });
 export const History = mongoose.model("histories", historySchema);

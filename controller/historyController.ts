@@ -39,12 +39,13 @@ function decrypt(text: string | undefined | null) {
 export const getHistory = async (req: Request, res: Response) => {
   const { email } = req.body;
   try {
-    const history = (await History.find({ email })).reverse()
+    const history = (await History.find({ email })).reverse();
     const decryptedHistory = history.map((item) => ({
       ...item.toObject(),
       prompt: decrypt(item?.prompt),
       response: decrypt(item?.response),
       filePreview: decrypt(item?.filePreview),
+      createdAt: decrypt(item?.createdAt),
     }));
     res.json(decryptedHistory); // Use json() instead of send() for sending JSON response
   } catch (error) {
@@ -65,6 +66,7 @@ export const getHistoryById = async (req: Request, res: Response) => {
       prompt: decrypt(history?.prompt),
       response: decrypt(history?.response),
       filePreview: decrypt(history?.filePreview),
+      createdAt: decrypt(history?.createdAt),
     };
     res.json(decryptedHistory); // Use json() instead of send() for sending JSON response
   } catch (error) {
@@ -93,6 +95,7 @@ export const addHistory = async (req: Request, res: Response) => {
       prompt: encryptedPrompt,
       response: encryptedResponse,
       filePreview: encryptedFilePreview,
+      createdAt: encrypt(new Date().toISOString()),
     });
     const result = await newHistory.save();
     res.json({ newHistory: result });
