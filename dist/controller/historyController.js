@@ -26,9 +26,9 @@ function decrypt(text) {
 export const getHistory = async (req, res) => {
     const { email } = req.body;
     try {
-        const history = await History.find({ email }).lean();
+        const history = (await History.find({ email })).reverse();
         const decryptedHistory = history.map((item) => ({
-            ...item,
+            ...item.toObject(),
             prompt: decrypt(item?.prompt),
             response: decrypt(item?.response),
             filePreview: decrypt(item?.filePreview),
