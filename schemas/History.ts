@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const historySchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+  },
   historyId: {
     type: String,
     unique: true,

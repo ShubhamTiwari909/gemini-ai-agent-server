@@ -42,6 +42,7 @@ export const getHistory = async (req: Request, res: Response) => {
     const history = (await History.find({ email })).reverse();
     const decryptedHistory = history.map((item) => ({
       ...item.toObject(),
+      username: decrypt(item?.username),
       prompt: decrypt(item?.prompt),
       response: decrypt(item?.response),
       filePreview: decrypt(item?.filePreview),
@@ -63,6 +64,7 @@ export const getHistoryById = async (req: Request, res: Response) => {
     }
     const decryptedHistory = {
       ...history,
+      username: decrypt(history?.username),
       prompt: decrypt(history?.prompt),
       response: decrypt(history?.response),
       filePreview: decrypt(history?.filePreview),
@@ -76,26 +78,35 @@ export const getHistoryById = async (req: Request, res: Response) => {
 };
 
 export const addHistory = async (req: Request, res: Response) => {
-  const { historyId, email, prompt, response, filePreview } = req.body;
+  const { username, historyId, email, prompt, response, filePreview } =
+    req.body;
 
   try {
     const compressedImage = filePreview
       ? await compressBase64Image(filePreview)
       : "";
-    const [encryptedPrompt, encryptedResponse, encryptedFilePreview] =
-      await Promise.all([
-        encrypt(prompt),
-        encrypt(response),
-        encrypt(compressedImage),
-      ]);
+    const [
+      encryptedUsername,
+      encryptedPrompt,
+      encryptedResponse,
+      encryptedFilePreview,
+      encryptedDate,
+    ] = await Promise.all([
+      encrypt(username),
+      encrypt(prompt),
+      encrypt(response),
+      encrypt(compressedImage),
+      encrypt(new Date().toISOString()),
+    ]);
 
     const newHistory = new History({
       historyId,
       email,
+      username: encryptedUsername,
       prompt: encryptedPrompt,
       response: encryptedResponse,
       filePreview: encryptedFilePreview,
-      createdAt: encrypt(new Date().toISOString()),
+      createdAt: encryptedDate,
     });
     const result = await newHistory.save();
     res.json({ newHistory: result });
