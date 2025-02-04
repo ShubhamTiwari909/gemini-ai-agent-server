@@ -37,9 +37,14 @@ function decrypt(text: string | undefined | null) {
 }
 
 export const getHistory = async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { email, limit } = req.body;
+  let history;
   try {
-    const history = (await History.find({ email })).reverse();
+    if (limit) {
+      history = (await History.find({ email }).limit(limit)).reverse();
+    } else {
+      history = (await History.find({ email })).reverse();
+    }
     const decryptedHistory = history.map((item) => ({
       ...item.toObject(),
       username: decrypt(item?.username),

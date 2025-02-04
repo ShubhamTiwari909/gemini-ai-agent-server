@@ -14,5 +14,9 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
+    image: {
+        type: String,
+        required: true,
+    },
 });
 export const Users = mongoose.model("users", userSchema);
