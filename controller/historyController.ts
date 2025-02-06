@@ -88,7 +88,9 @@ export const addHistory = async (req: Request, res: Response) => {
 
   try {
     const compressedImage = filePreview
-      ? await compressBase64Image(filePreview)
+      ? filePreview.includes("application/pdf")
+        ? filePreview
+        : await compressBase64Image(filePreview)
       : "";
     const [
       encryptedUsername,

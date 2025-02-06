@@ -74,7 +74,9 @@ export const addHistory = async (req, res) => {
     const { username, historyId, email, prompt, response, filePreview } = req.body;
     try {
         const compressedImage = filePreview
-            ? await compressBase64Image(filePreview)
+            ? filePreview.includes("application/pdf")
+                ? filePreview
+                : await compressBase64Image(filePreview)
             : "";
         const [encryptedUsername, encryptedPrompt, encryptedResponse, encryptedFilePreview, encryptedDate,] = await Promise.all([
             encrypt(username),
