@@ -74,7 +74,7 @@ export const addHistory = async (req, res) => {
     const { username, historyId, email, prompt, response, filePreview } = req.body;
     try {
         const compressedImage = filePreview
-            ? filePreview.includes("application/pdf")
+            ? !filePreview.includes("image")
                 ? filePreview
                 : await compressBase64Image(filePreview)
             : "";
