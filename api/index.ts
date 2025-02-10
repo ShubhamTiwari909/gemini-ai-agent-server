@@ -6,6 +6,7 @@ import helmet from "helmet";
 import "dotenv/config";
 import { connectionWrapper } from "../middlewares/db-connection.js";
 import compression from "compression";
+import { customAuthMiddleware } from "../middlewares/api-auth.js";
 
 const app: Express = express();
 
@@ -35,6 +36,7 @@ const corsOptions = {
 
 // Middleware to parse JSON
 app.use(cors(corsOptions));
+app.use(customAuthMiddleware);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" })); // for parsing application/x-www-form-urlencoded
 app.use((req, res, next) => connectionWrapper(req, res, next));
@@ -46,10 +48,7 @@ app.get("/", async (_: Request, res: Response) => {
 });
 
 app.use("/history", historyRoutes);
-app.use(
-  "/users",
-  usersRoutes
-);
+app.use("/users", usersRoutes);
 
 // Start the server
 const PORT = Number(process.env.PORT) || 5000;
@@ -59,4 +58,3 @@ app.listen(PORT, () => {
 });
 
 export default app;
-
