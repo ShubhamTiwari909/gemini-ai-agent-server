@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { decrypt } from "../utils/encrypt-decrypt";
+import { decrypt } from "../utils/encrypt-decrypt.js";
 
 export function customAuthMiddleware(
   req: Request,

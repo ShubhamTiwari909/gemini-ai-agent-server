@@ -1,4 +1,4 @@
-import { decrypt } from "../utils/encrypt-decrypt";
+import { decrypt } from "../utils/encrypt-decrypt.js";
 export function customAuthMiddleware(req, res, next) {
     const authHeader = req.headers["authorization"];
     const encryptedToken = authHeader && authHeader.split(" ")[1];
