@@ -55,11 +55,10 @@ export const addHistory = async (req: Request, res: Response) => {
     req.body;
 
   try {
-    const compressedImage = filePreview
-      ? !filePreview.includes("image")
-        ? filePreview
-        : await compressBase64Image(filePreview)
-      : "";
+    const compressedImage =
+      typeof filePreview === "string" && filePreview.includes("image")
+        ? await compressBase64Image(filePreview)
+        : filePreview || "";
     const [
       encryptedUsername,
       encryptedPrompt,

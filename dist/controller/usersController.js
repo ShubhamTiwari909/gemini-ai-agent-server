@@ -5,35 +5,34 @@ async function checkIfExists(email) {
 export const getUserByEmail = async (req, res) => {
     const { email } = req.body;
     if (!email)
-        return res.status(400).send("Bad Request - email is required");
+        return res.status(400).json({ message: "Bad Request - email is required" });
     try {
         const user = await Users.findOne({ email });
         if (!user)
-            return res.status(404).send("User not found");
-        res.status(200).send(user);
+            return res.status(404).json({ message: "User not found" });
+        res.status(200).json(user);
     }
     catch (err) {
         console.error(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ message: "Internal Server Error" });
     }
 };
 export const addUser = async (req, res) => {
     const { userId, name, email, image } = req.body;
-    console.log("Image - ", image);
     if (!userId || !name || !email || !image)
         return res
             .status(400)
-            .send("Bad Request - userId, name and email is required");
+            .json({ message: "Bad Request - userId, name and email is required" });
     if (await checkIfExists(email)) {
-        return res.status(200).send("User already exists");
+        return res.status(200).json({ message: "User already exists" });
     }
     try {
         const newUser = new Users({ userId, name, email, image });
         const result = await newUser.save();
-        res.status(201).send(`User saved - ${result}`);
+        res.status(201).json(`User saved - ${result}`);
     }
     catch (err) {
         console.error(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ message: "Internal Server Error" });
     }
 };
