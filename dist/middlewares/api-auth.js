@@ -1,23 +1,30 @@
 import { decrypt } from "../utils/encrypt-decrypt.js";
 export function customAuthMiddleware(req, res, next) {
-    const authHeader = req.headers["authorization"];
-    const encryptedToken = authHeader && authHeader.split(" ")[1];
-    if (!encryptedToken) {
-        res.status(401).json({ message: "Unauthorized: Token missing" });
-    }
-    try {
-        const user = decrypt(encryptedToken);
-        if (user !== process.env.API_AUTH_DECRYPTED_TOKEN) {
+    const host = req.get("host");
+    console.log(host);
+    if (host?.includes(process.env.HOST)) {
+        const authHeader = req.headers["authorization"];
+        const encryptedToken = authHeader && authHeader.split(" ")[1];
+        if (!encryptedToken) {
+            res.status(401).json({ message: "Unauthorized: Token missing" });
+        }
+        try {
+            const user = decrypt(encryptedToken);
+            if (user !== process.env.API_AUTH_DECRYPTED_TOKEN) {
+                res.status(403).json({
+                    message: "Forbidden: Invalid or corrupted token",
+                    token: user,
+                });
+            }
+            next();
+        }
+        catch (error) {
             res
                 .status(403)
-                .json({
-                message: "Forbidden: Invalid or corrupted token",
-                token: user,
-            });
+                .json({ message: "Forbidden: Invalid or corrupted token" });
         }
-        next();
     }
-    catch (error) {
-        res.status(403).json({ message: "Forbidden: Invalid or corrupted token" });
+    else {
+        res.status(403).json({ message: "Invalid domain" });
     }
 }
