@@ -24,6 +24,10 @@ const historySchema = new mongoose.Schema({
   },
   filePreview: String,
   createdAt: String,
+  userId:{
+    type: String,
+    required:true,
+  }
 });
 
 export const History = mongoose.model("histories", historySchema);

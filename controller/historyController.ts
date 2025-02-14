@@ -5,14 +5,16 @@ import { History } from "../schemas/History.js";
 import { decrypt, encrypt } from "../utils/encrypt-decrypt.js";
 
 export const getHistory = async (req: Request, res: Response) => {
-  const { email, limit } = req.body;
+  const { email, userId, limit } = req.body;
   let history;
+
   try {
     if (limit) {
-      history = (await History.find({ email }).limit(limit)).reverse();
+      history = (await History.find({ email, userId }).limit(limit)).reverse();
     } else {
-      history = (await History.find({ email })).reverse();
+      history = (await History.find({ email, userId })).reverse();
     }
+
     const decryptedHistory = history.map((item) => ({
       ...item.toObject(),
       username: decrypt(item?.username),
@@ -29,9 +31,9 @@ export const getHistory = async (req: Request, res: Response) => {
 };
 
 export const getHistoryById = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { id, userId } = req.body;
   try {
-    const history = await History.findById(id).lean();
+    const history = await History.findOne({_id:id, userId:userId}).lean();
     if (!history) {
       return res.status(404).json({ message: "History not found" });
     }
@@ -51,7 +53,7 @@ export const getHistoryById = async (req: Request, res: Response) => {
 };
 
 export const addHistory = async (req: Request, res: Response) => {
-  const { username, historyId, email, prompt, response, filePreview } =
+  const { userId, username, historyId, email, prompt, response, filePreview } =
     req.body;
 
   try {
@@ -74,6 +76,7 @@ export const addHistory = async (req: Request, res: Response) => {
     ]);
 
     const newHistory = new History({
+      userId,
       historyId,
       email,
       username: encryptedUsername,

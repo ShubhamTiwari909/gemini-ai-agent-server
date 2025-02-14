@@ -3,14 +3,14 @@ import { compressBase64Image } from "../utils/image-compression.js";
 import { History } from "../schemas/History.js";
 import { decrypt, encrypt } from "../utils/encrypt-decrypt.js";
 export const getHistory = async (req, res) => {
-    const { email, limit } = req.body;
+    const { email, userId, limit } = req.body;
     let history;
     try {
         if (limit) {
-            history = (await History.find({ email }).limit(limit)).reverse();
+            history = (await History.find({ email, userId }).limit(limit)).reverse();
         }
         else {
-            history = (await History.find({ email })).reverse();
+            history = (await History.find({ email, userId })).reverse();
         }
         const decryptedHistory = history.map((item) => ({
             ...item.toObject(),
@@ -28,9 +28,9 @@ export const getHistory = async (req, res) => {
     }
 };
 export const getHistoryById = async (req, res) => {
-    const { id } = req.body;
+    const { id, userId } = req.body;
     try {
-        const history = await History.findById(id).lean();
+        const history = await History.findOne({ _id: id, userId: userId }).lean();
         if (!history) {
             return res.status(404).json({ message: "History not found" });
         }
@@ -50,7 +50,7 @@ export const getHistoryById = async (req, res) => {
     }
 };
 export const addHistory = async (req, res) => {
-    const { username, historyId, email, prompt, response, filePreview } = req.body;
+    const { userId, username, historyId, email, prompt, response, filePreview } = req.body;
     try {
         const compressedImage = typeof filePreview === "string" && filePreview.includes("image")
             ? await compressBase64Image(filePreview)
@@ -63,6 +63,7 @@ export const addHistory = async (req, res) => {
             encrypt(new Date().toISOString()),
         ]);
         const newHistory = new History({
+            userId,
             historyId,
             email,
             username: encryptedUsername,
