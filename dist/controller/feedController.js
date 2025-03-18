@@ -18,7 +18,6 @@ export const getFeed = async (req, res) => {
             prompt: decrypt(item?.prompt),
             response: decrypt(item?.response),
             filePreview: decrypt(item?.filePreview),
-            createdAt: decrypt(item?.createdAt),
         }));
         // Send response with pagination metadata
         res.json({
