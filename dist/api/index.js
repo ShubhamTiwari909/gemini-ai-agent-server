@@ -1,6 +1,7 @@
 import express from "express";
 import historyRoutes from "../routes/history.js";
 import usersRoutes from "../routes/users.js";
+import feedRoutes from "../routes/feed.js";
 import cors from "cors";
 import helmet from "helmet";
 import "dotenv/config";
@@ -41,6 +42,7 @@ app.get("/", async (_, res) => {
 });
 app.use("/history", historyRoutes);
 app.use("/users", usersRoutes);
+app.use("/feed", feedRoutes);
 // Start the server
 const PORT = Number(process.env.PORT) || 5000;
 app.listen(PORT, () => {
