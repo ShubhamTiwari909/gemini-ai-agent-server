@@ -3,7 +3,6 @@ import { History } from "../schemas/History.js";
 import { decrypt } from "../utils/encrypt-decrypt.js";
 export const getFeed = async (req, res) => {
     const { limit = 10, page = 1 } = req.body; // Default limit to 10, page to 1
-    console.log(page, limit);
     try {
         // Calculate the number of documents to skip
         const skip = (page - 1) * limit;
