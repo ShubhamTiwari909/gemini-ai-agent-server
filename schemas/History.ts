@@ -27,7 +27,8 @@ const historySchema = new mongoose.Schema({
   userId:{
     type: String,
     required:true,
-  }
+  },
+  tags:[String]
 });
 
 export const History = mongoose.model("histories", historySchema);

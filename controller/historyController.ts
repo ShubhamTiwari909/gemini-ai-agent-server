@@ -51,9 +51,8 @@ export const getHistoryById = async (req: Request, res: Response) => {
 };
 
 export const addHistory = async (req: Request, res: Response) => {
-  const { userId, username, historyId, email, prompt, response, filePreview } =
+  const { userId, username, historyId, email, prompt, response, filePreview, tags } =
     req.body;
-
   try {
     const compressedImage =
       typeof filePreview === "string" && filePreview.includes("image")
@@ -80,6 +79,7 @@ export const addHistory = async (req: Request, res: Response) => {
       response: encryptedResponse,
       filePreview: encryptedFilePreview,
       createdAt: new Date().toISOString(),
+      tags,
     });
     const result = await newHistory.save();
     res.json({ newHistory: result });
