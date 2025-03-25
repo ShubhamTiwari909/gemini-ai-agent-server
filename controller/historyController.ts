@@ -2,7 +2,6 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { compressBase64Image } from "../utils/image-compression.js";
 import { History } from "../schemas/History.js";
-import { decrypt, encrypt } from "../utils/encrypt-decrypt.js";
 
 export const getHistory = async (req: Request, res: Response) => {
   const { email, userId, limit } = req.body;
@@ -15,14 +14,7 @@ export const getHistory = async (req: Request, res: Response) => {
       history = (await History.find({ email, userId })).reverse();
     }
 
-    const decryptedHistory = history.map((item) => ({
-      ...item.toObject(),
-      username: decrypt(item?.username),
-      prompt: decrypt(item?.prompt),
-      response: decrypt(item?.response),
-      filePreview: decrypt(item?.filePreview),
-    }));
-    res.json(decryptedHistory); // Use json() instead of send() for sending JSON response
+    res.json(history); // Use json() instead of send() for sending JSON response
   } catch (error) {
     console.error("Error getting history:", error);
     res.status(500).json({ message: "Error retrieving history" }); // Send structured error response
@@ -36,14 +28,7 @@ export const getHistoryById = async (req: Request, res: Response) => {
     if (!history) {
       return res.status(404).json({ message: "History not found" });
     }
-    const decryptedHistory = {
-      ...history,
-      username: decrypt(history?.username),
-      prompt: decrypt(history?.prompt),
-      response: decrypt(history?.response),
-      filePreview: decrypt(history?.filePreview),
-    };
-    res.json(decryptedHistory); // Use json() instead of send() for sending JSON response
+    res.json(history); // Use json() instead of send() for sending JSON response
   } catch (error) {
     console.error("Error getting history:", error);
     res.status(500).json({ message: "Error retrieving history" }); // Send structured error response
@@ -58,26 +43,15 @@ export const addHistory = async (req: Request, res: Response) => {
       typeof filePreview === "string" && filePreview.includes("image")
         ? await compressBase64Image(filePreview)
         : filePreview || "";
-    const [
-      encryptedUsername,
-      encryptedPrompt,
-      encryptedResponse,
-      encryptedFilePreview,
-    ] = await Promise.all([
-      encrypt(username),
-      encrypt(prompt),
-      encrypt(response),
-      encrypt(compressedImage),
-    ]);
 
     const newHistory = new History({
       userId,
       historyId,
       email,
-      username: encryptedUsername,
-      prompt: encryptedPrompt,
-      response: encryptedResponse,
-      filePreview: encryptedFilePreview,
+      username,
+      prompt,
+      response,
+      filePreview: compressedImage,
       createdAt: new Date().toISOString(),
       tags,
     });

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const historySchema = new mongoose.Schema({
+export const historySchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
