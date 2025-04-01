@@ -21,6 +21,10 @@ export const historySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    responseType: {
+        type: String,
+        required: true
+    },
     filePreview: String,
     createdAt: String,
     userId: {

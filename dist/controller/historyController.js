@@ -33,7 +33,7 @@ export const getHistoryById = async (req, res) => {
     }
 };
 export const addHistory = async (req, res) => {
-    const { userId, username, historyId, email, prompt, response, filePreview, tags } = req.body;
+    const { userId, username, historyId, email, prompt, response, responseType, filePreview, tags, } = req.body;
     try {
         const compressedImage = typeof filePreview === "string" && filePreview.includes("image")
             ? await compressBase64Image(filePreview)
@@ -45,6 +45,7 @@ export const addHistory = async (req, res) => {
             username,
             prompt,
             response,
+            responseType,
             filePreview: compressedImage,
             createdAt: new Date().toISOString(),
             tags,

@@ -36,7 +36,7 @@ export const getHistoryById = async (req: Request, res: Response) => {
 };
 
 export const addHistory = async (req: Request, res: Response) => {
-  const { userId, username, historyId, email, prompt, response, filePreview, tags } =
+  const { userId, username, historyId, email, prompt, response, responseType, filePreview, tags, } =
     req.body;
   try {
     const compressedImage =
@@ -51,6 +51,7 @@ export const addHistory = async (req: Request, res: Response) => {
       username,
       prompt,
       response,
+      responseType,
       filePreview: compressedImage,
       createdAt: new Date().toISOString(),
       tags,
