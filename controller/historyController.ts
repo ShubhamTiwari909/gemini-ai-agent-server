@@ -22,9 +22,9 @@ export const getHistory = async (req: Request, res: Response) => {
 };
 
 export const getHistoryById = async (req: Request, res: Response) => {
-  const { id, userId } = req.body;
+  const { id } = req.body;
   try {
-    const history = await History.findOne({_id:id, userId:userId}).lean();
+    const history = await History.findOne({_id:id}).lean();
     if (!history) {
       return res.status(404).json({ message: "History not found" });
     }
