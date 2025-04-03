@@ -9,9 +9,9 @@ export const getHistory = async (req: Request, res: Response) => {
 
   try {
     if (limit) {
-      history = (await History.find({ email, userId }).limit(limit)).reverse();
+      history = (await History.find({ "user.email": email, "user.userId": userId }).limit(limit)).reverse();
     } else {
-      history = (await History.find({ email, userId })).reverse();
+      history = (await History.find({ "user.email": email, "user.userId": userId })).reverse();
     }
 
     res.json(history); // Use json() instead of send() for sending JSON response
@@ -36,7 +36,7 @@ export const getHistoryById = async (req: Request, res: Response) => {
 };
 
 export const addHistory = async (req: Request, res: Response) => {
-  const { userId, username, historyId, email, prompt, response, responseType, filePreview, tags, } =
+  const { user, historyId, prompt, response, responseType, filePreview, tags, } =
     req.body;
   try {
     const compressedImage =
@@ -45,10 +45,8 @@ export const addHistory = async (req: Request, res: Response) => {
         : filePreview || "";
 
     const newHistory = new History({
-      userId,
+      user,
       historyId,
-      email,
-      username,
       prompt,
       response,
       responseType,

@@ -1,16 +1,26 @@
 import mongoose from "mongoose";
 export const historySchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
+    user: {
+        userId: {
+            type: String,
+            required: true,
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+        },
+        image: {
+            type: String,
+            required: true,
+        },
     },
     historyId: {
         type: String,
         unique: true,
-        required: true,
-    },
-    email: {
-        type: String,
         required: true,
     },
     prompt: {
@@ -27,10 +37,6 @@ export const historySchema = new mongoose.Schema({
     },
     filePreview: String,
     createdAt: String,
-    userId: {
-        type: String,
-        required: true,
-    },
     tags: [String]
 });
 export const History = mongoose.model("histories", historySchema);

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const userSchema = new mongoose.Schema({
+export const UserSchema = {
     userId: {
         type: String,
         unique: true,
@@ -18,5 +18,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-});
+};
+const userSchema = new mongoose.Schema(UserSchema);
 export const Users = mongoose.model("users", userSchema);
