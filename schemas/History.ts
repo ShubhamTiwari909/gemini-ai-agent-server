@@ -1,25 +1,26 @@
 import mongoose from "mongoose";
-import { UserSchema } from "./Users.js";
+
+const User = {
+  userId: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+}
 
 export const historySchema = new mongoose.Schema({
-  user:{
-    userId: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-      required: true,
-    },
-  },
+  user: User,
   historyId: {
     type: String,
     unique: true,
@@ -39,7 +40,8 @@ export const historySchema = new mongoose.Schema({
   },
   filePreview: String,
   createdAt: String,
-  tags:[String]
+  tags:[String],
+  likes:[User]
 });
 
 export const History = mongoose.model("histories", historySchema);

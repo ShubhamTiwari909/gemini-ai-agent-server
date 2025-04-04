@@ -36,7 +36,7 @@ export const getHistoryById = async (req: Request, res: Response) => {
 };
 
 export const addHistory = async (req: Request, res: Response) => {
-  const { user, historyId, prompt, response, responseType, filePreview, tags, } =
+  const { user, historyId, prompt, response, responseType, filePreview, tags } =
     req.body;
   try {
     const compressedImage =
@@ -53,6 +53,7 @@ export const addHistory = async (req: Request, res: Response) => {
       filePreview: compressedImage,
       createdAt: new Date().toISOString(),
       tags,
+      likes:[]
     });
     const result = await newHistory.save();
     res.json({ newHistory: result });
@@ -61,3 +62,26 @@ export const addHistory = async (req: Request, res: Response) => {
     res.status(500).send("Error saving history");
   }
 };
+
+export const updateLikes = async (req: Request, res: Response) => {
+  const { historyId, user } = req.body;
+
+  const history = await History.find({historyId:historyId, "likes.email":user.email});
+  if(history.length === 0){
+    const updatedHistory = await History.findOneAndUpdate(
+      { historyId: historyId },
+      { $push: { likes: user } },
+      { new: true } // or `returnDocument: 'after'` if using native MongoDB
+    );
+    res.json({ likes: updatedHistory?.likes });
+  }
+  else {
+    const updatedHistory = await History.findOneAndUpdate(
+      { historyId: historyId },
+      { $pull: { likes: user } },
+      { new: true }
+    );
+  
+    res.json({ likes: updatedHistory?.likes });
+  }
+}
