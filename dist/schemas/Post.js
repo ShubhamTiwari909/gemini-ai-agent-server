@@ -39,6 +39,7 @@ export const postSchema = new mongoose.Schema({
     filePreview: String,
     createdAt: String,
     tags: [String],
-    likes: [User]
+    likes: [User],
+    views: [User]
 });
 export const Posts = mongoose.model("posts", postSchema);

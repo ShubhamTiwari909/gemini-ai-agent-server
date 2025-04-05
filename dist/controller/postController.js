@@ -47,7 +47,8 @@ export const addPost = async (req, res) => {
             filePreview: compressedImage,
             createdAt: new Date().toISOString(),
             tags,
-            likes: []
+            likes: [],
+            views: [],
         });
         const result = await newPost.save();
         res.json({ newPost: result });
@@ -68,5 +69,17 @@ export const updateLikes = async (req, res) => {
     else {
         const updatedPost = await Posts.findOneAndUpdate({ postId: postId }, { $pull: { likes: user } }, { new: true });
         res.json({ likes: updatedPost?.likes });
+    }
+};
+export const updateViews = async (req, res) => {
+    const { postId, user } = req.body;
+    const post = await Posts.find({ postId: postId, "views.email": user.email });
+    if (post.length === 0) {
+        const updatedPost = await Posts.findOneAndUpdate({ postId: postId }, { $addToSet: { views: user } }, { new: true } // or `returnDocument: 'after'` if using native MongoDB
+        );
+        res.json({ views: updatedPost?.views });
+    }
+    else {
+        res.json({ message: "Already viewed" });
     }
 };

@@ -1,5 +1,5 @@
 import express from "express";
-import { addPost, getPosts, getPostById, updateLikes } from "../controller/postController.js";
+import { addPost, getPosts, getPostById, updateLikes, updateViews } from "../controller/postController.js";
 import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 const router = express.Router();
 router.post("/add", dynamicLimiter(60), async (req, res, next) => {
@@ -29,6 +29,14 @@ router.post("/findById", dynamicLimiter(120), async (req, res, next) => {
 router.post("/updateLikes", dynamicLimiter(120), async (req, res, next) => {
     try {
         await updateLikes(req, res);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+router.post("/updateViews", dynamicLimiter(120), async (req, res, next) => {
+    try {
+        await updateViews(req, res);
     }
     catch (error) {
         next(error);

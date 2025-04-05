@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from "express";
-import { addPost, getPosts, getPostById, updateLikes } from "../controller/postController.js";
+import { addPost, getPosts, getPostById, updateLikes, updateViews } from "../controller/postController.js";
 import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 
 const router: Router = express.Router();
@@ -52,5 +52,16 @@ router.post(
   }
 );
 
+router.post(
+  "/updateViews",
+  dynamicLimiter(120),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await updateViews(req, res);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default router;
