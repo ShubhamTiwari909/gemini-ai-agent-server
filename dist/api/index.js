@@ -1,5 +1,5 @@
 import express from "express";
-import historyRoutes from "../routes/history.js";
+import postRoutes from "../routes/post.js";
 import usersRoutes from "../routes/users.js";
 import feedRoutes from "../routes/feed.js";
 import cors from "cors";
@@ -40,7 +40,7 @@ app.use(compression());
 app.get("/", async (_, res) => {
     res.send("Hello world");
 });
-app.use("/history", historyRoutes);
+app.use("/posts", postRoutes);
 app.use("/users", usersRoutes);
 app.use("/feed", feedRoutes);
 // Start the server

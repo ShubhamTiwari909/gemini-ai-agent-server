@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from "express";
-import { addHistory, getHistory, getHistoryById, updateLikes } from "../controller/historyController.js";
+import { addPost, getPosts, getPostById, updateLikes } from "../controller/postController.js";
 import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 
 const router: Router = express.Router();
@@ -9,7 +9,7 @@ router.post(
   dynamicLimiter(60),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await addHistory(req, res);
+      await addPost(req, res);
     } catch (error) {
       next(error);
     }
@@ -21,7 +21,7 @@ router.post(
   dynamicLimiter(120),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await getHistory(req, res);
+      await getPosts(req, res);
     } catch (error) {
       next(error);
     }
@@ -33,7 +33,7 @@ router.post(
   dynamicLimiter(120),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await getHistoryById(req, res);
+      await getPostById(req, res);
     } catch (error) {
       next(error);
     }
@@ -51,7 +51,6 @@ router.post(
     }
   }
 );
-
 
 
 export default router;

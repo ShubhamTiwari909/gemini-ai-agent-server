@@ -1,25 +1,25 @@
 import "dotenv/config";
-import { History } from "../schemas/History.js";
+import { Posts } from "../schemas/Post.js";
 export const getFeedWrapper = async (req, res, filter) => {
     const { limit = 10, page = 1 } = req.body; // Default limit to 10, page to 1
     try {
         // Calculate the number of documents to skip
         const skip = (page - 1) * limit;
-        // Fetch history with sorting and pagination
-        const history = await History.find(filter)
+        // Fetch posts with sorting and pagination
+        const posts = await Posts.find(filter)
             .sort({ createdAt: -1 }) // Sort by newest first
             .skip(skip)
             .limit(parseInt(limit));
         // Send response with pagination metadata
         res.json({
-            data: history,
+            data: posts,
             currentPage: parseInt(page),
-            hasMore: history.length === parseInt(limit), // Check if there are more items
+            hasMore: posts.length === parseInt(limit), // Check if there are more items
         });
     }
     catch (error) {
-        console.error("Error getting history:", error);
-        res.status(500).json({ message: "Error retrieving history" });
+        console.error("Error getting posts:", error);
+        res.status(500).json({ message: "Error retrieving posts" });
     }
 };
 export const getFeed = async (req, res) => {

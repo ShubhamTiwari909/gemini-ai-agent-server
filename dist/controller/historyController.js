@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { compressBase64Image } from "../utils/image-compression.js";
-import { History } from "../schemas/History.js";
+import { History } from "../schemas/Post.js";
 export const getHistory = async (req, res) => {
     const { email, userId, limit } = req.body;
     let history;

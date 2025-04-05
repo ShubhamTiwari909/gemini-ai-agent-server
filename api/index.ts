@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import historyRoutes from "../routes/history.js";
+import postRoutes from "../routes/post.js";
 import usersRoutes from "../routes/users.js";
 import feedRoutes from "../routes/feed.js";
 import cors from "cors";
@@ -48,7 +48,7 @@ app.get("/", async (_: Request, res: Response) => {
   res.send("Hello world");
 });
 
-app.use("/history", historyRoutes);
+app.use("/posts", postRoutes);
 app.use("/users", usersRoutes);
 app.use("/feed", feedRoutes);
 

@@ -19,9 +19,9 @@ const User = {
   },
 }
 
-export const historySchema = new mongoose.Schema({
+export const postSchema = new mongoose.Schema({
   user: User,
-  historyId: {
+  postId: {
     type: String,
     unique: true,
     required: true,
@@ -44,4 +44,4 @@ export const historySchema = new mongoose.Schema({
   likes:[User]
 });
 
-export const History = mongoose.model("histories", historySchema);
+export const Posts = mongoose.model("posts", postSchema);
