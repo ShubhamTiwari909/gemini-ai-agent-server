@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from "express";
-import { addPost, getPosts, getPostById, updateLikes, updateViews } from "../controller/postController.js";
+import { addPost, getPosts, getPostById, updateLikes, updateViews, addComment, addReply, updateCommentLikes, updateReplyLikes } from "../controller/postController.js";
 import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 
 const router: Router = express.Router();
@@ -58,6 +58,55 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await updateViews(req, res);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+
+router.post(
+  "/updateComments",
+  dynamicLimiter(120),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await addComment(req, res);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/updateReplies",
+  dynamicLimiter(120),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await addReply(req, res);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/updateCommentLikes",
+  dynamicLimiter(120),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await updateCommentLikes(req, res);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/updateReplyLikes",
+  dynamicLimiter(120),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await updateReplyLikes(req, res);
     } catch (error) {
       next(error);
     }

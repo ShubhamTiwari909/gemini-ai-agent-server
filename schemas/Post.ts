@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
-const User = {
-  userId: {
-    type: String,
-    required: true,
-  },
+export const User = {
   name: {
     type: String,
     required: true,
@@ -18,6 +14,26 @@ const User = {
     required: true,
   },
 }
+
+const CommentUserSchema = new mongoose.Schema(User, { _id: false }); // Prevent auto-generating _id for embedded user
+
+const CommentTypeSchema = {
+  id: { type: String, required: true },        // Comment ID
+  text: { type: String, required: true },      // Comment content
+  user: { type: CommentUserSchema, required: true },
+  likes: [User],
+}
+
+// Define the base Comment schema
+const CommentSchema = new mongoose.Schema({
+  ...CommentTypeSchema,
+  replies: {
+    type: [new mongoose.Schema({
+      ...CommentTypeSchema,
+    }, { _id: false })],
+    default: []
+  }
+}, { _id: false });
 
 export const postSchema = new mongoose.Schema({
   user: User,
@@ -42,7 +58,11 @@ export const postSchema = new mongoose.Schema({
   createdAt: String,
   tags:[String],
   likes:[User],
-  views:[User]
+  views:[User],
+  comments: {
+    type: [CommentSchema],
+    default: []
+  }
 });
 
 export const Posts = mongoose.model("posts", postSchema);
