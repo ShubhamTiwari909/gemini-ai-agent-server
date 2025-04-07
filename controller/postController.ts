@@ -19,7 +19,6 @@ export const getPosts = async (req: Request, res: Response) => {
     } else {
       posts = (await Posts.find({ "user.email": email, "user.userId": userId })).reverse();
     }
-
     res.json(posts); // Use json() instead of send() for sending JSON response
   } catch (error) {
     console.error("Error getting posts:", error);

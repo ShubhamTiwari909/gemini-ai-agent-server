@@ -31,7 +31,11 @@ const CommentSchema = new mongoose.Schema({
     }
 }, { _id: false });
 export const postSchema = new mongoose.Schema({
-    user: User,
+    user: { ...User,
+        userId: {
+            type: String,
+            required: true,
+        } },
     postId: {
         type: String,
         unique: true,
