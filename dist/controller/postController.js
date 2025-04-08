@@ -19,13 +19,14 @@ export const getPosts = async (req, res) => {
     }
 };
 export const getPostById = async (req, res) => {
-    const { id } = req.body;
+    const { id, limit, skip } = req.body;
     try {
         const post = await Posts.findOne({ _id: id }).lean();
+        const comments = post?.comments.slice(skip, skip + limit);
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
-        res.json(post);
+        res.json({ post, comments, commentsLength: post?.comments.length });
     }
     catch (error) {
         console.error("Error getting post:", error);
@@ -84,24 +85,44 @@ export const updateViews = async (req, res) => {
         res.json({ message: "Already viewed" });
     }
 };
-export const addComment = async (req, res) => {
-    const { postId, commentId, commentText, user } = req.body;
+export const fetchComments = async (req, res) => {
+    const { postId, skip, limit } = req.body;
+    let hasMore;
     try {
-        const updatedPost = await Posts.findOneAndUpdate({ postId }, {
+        const post = await Posts.findOne({ postId: postId });
+        if (!post)
+            return res.status(404).json({ message: "Post not found" });
+        const comments = post.comments.slice(skip, limit);
+        if (post.comments[post.comments.length - 1].id === comments[comments.length - 1].id) {
+            hasMore = false;
+        }
+        else {
+            hasMore = true;
+        }
+        res.status(200).json({ comments, limit: limit + 2, hasMore });
+    }
+    catch (error) {
+        console.error("Error fetching comments:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+export const addComment = async (req, res) => {
+    const { postId, commentId, commentText, user, limit, skip } = req.body;
+    try {
+        await Posts.updateOne({ postId }, {
             $push: {
                 comments: {
-                    $each: [{
-                            id: commentId,
-                            text: commentText,
-                            user,
-                            createdAt: new Date().toISOString(),
-                            replies: [] // optional — will default to []
-                        }],
-                    $position: 0
+                    id: commentId,
+                    text: commentText,
+                    user,
+                    createdAt: new Date().toISOString(),
+                    replies: [] // optional — will default to []
                 }
             }
         }, { new: true });
-        res.status(200).json({ comments: updatedPost?.comments });
+        const updatedPost = await Posts.findOne({ postId: postId });
+        const comment = updatedPost?.comments[updatedPost?.comments.length - 1];
+        res.status(200).json({ comment: [comment], commentsLength: updatedPost?.comments.length });
     }
     catch (error) {
         console.error("Error adding comment:", error);
@@ -126,7 +147,7 @@ export const updateCommentLikes = async (req, res) => {
             comment.likes.push(user);
         }
         await post.save();
-        return res.status(200).json({ comments: post.comments });
+        return res.status(200).json({ comment });
     }
     catch (error) {
         console.error("Error adding comment:", error);
@@ -170,13 +191,10 @@ export const addReply = async (req, res) => {
         }, {
             $push: {
                 "comments.$.replies": {
-                    $each: [{
-                            id: replyId,
-                            text: replyText,
-                            user,
-                            createdAt: new Date().toISOString()
-                        }],
-                    $position: 0
+                    id: replyId,
+                    text: replyText,
+                    user,
+                    createdAt: new Date().toISOString()
                 }
             }
         }, { new: true });
