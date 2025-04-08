@@ -121,10 +121,14 @@ export const addComment = async (req: Request, res: Response) => {
       {
         $push: {
           comments: {
-            id: commentId,
-            text: commentText,
-            user,
-            replies: [] // optional — will default to []
+            $each:[{
+              id: commentId,
+              text: commentText,
+              user,
+              createdAt:new Date().toISOString(),
+              replies: [] // optional — will default to []
+            }],
+            $position: 0
           }
         }
       },
@@ -213,9 +217,13 @@ export const addReply = async (req: Request, res: Response) => {
       {
         $push: {
           "comments.$.replies": {
-            id: replyId,
-            text: replyText,
-            user,
+            $each: [{
+              id: replyId,
+              text: replyText,
+              user,
+              createdAt:new Date().toISOString()
+            }],
+            $position: 0
           }
         }
       },

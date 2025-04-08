@@ -19,6 +19,7 @@ const CommentTypeSchema = {
     text: { type: String, required: true }, // Comment content
     user: { type: CommentUserSchema, required: true },
     likes: [User],
+    createdAt: String,
 };
 // Define the base Comment schema
 const CommentSchema = new mongoose.Schema({

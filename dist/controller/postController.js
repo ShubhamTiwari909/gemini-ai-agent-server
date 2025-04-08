@@ -90,10 +90,14 @@ export const addComment = async (req, res) => {
         const updatedPost = await Posts.findOneAndUpdate({ postId }, {
             $push: {
                 comments: {
-                    id: commentId,
-                    text: commentText,
-                    user,
-                    replies: [] // optional — will default to []
+                    $each: [{
+                            id: commentId,
+                            text: commentText,
+                            user,
+                            createdAt: new Date().toISOString(),
+                            replies: [] // optional — will default to []
+                        }],
+                    $position: 0
                 }
             }
         }, { new: true });
@@ -166,9 +170,13 @@ export const addReply = async (req, res) => {
         }, {
             $push: {
                 "comments.$.replies": {
-                    id: replyId,
-                    text: replyText,
-                    user,
+                    $each: [{
+                            id: replyId,
+                            text: replyText,
+                            user,
+                            createdAt: new Date().toISOString()
+                        }],
+                    $position: 0
                 }
             }
         }, { new: true });
