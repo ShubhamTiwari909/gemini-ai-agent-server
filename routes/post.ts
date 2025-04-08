@@ -4,113 +4,53 @@ import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 
 const router: Router = express.Router();
 
-router.post(
-  "/add",
-  dynamicLimiter(60),
-  async (req: Request, res: Response, next: NextFunction) => {
+const routes = [
+  {
+    path: "/add",
+    method: (req: Request, res: Response) => addPost(req, res)
+  },
+  {
+    path: "/find",
+    method: (req: Request, res: Response) => getPosts(req, res)
+  },
+  {
+    path: "/findById",
+    method: (req: Request, res: Response) => getPostById(req, res)
+  },
+  {
+    path: "/updateLikes",
+    method: (req: Request, res: Response) => updateLikes(req, res)
+  },
+  {
+    path: "/updateViews",
+    method: (req: Request, res: Response) => updateViews(req, res)
+  },
+  {
+    path: "/updateComments",
+    method: (req: Request, res: Response) => addComment(req, res)
+  }, 
+  {
+    path: "/updateReplies",
+    method: (req: Request, res: Response) => addReply(req, res)
+  },{
+    path: "/updateCommentLikes",
+    method: (req: Request, res: Response) => updateCommentLikes(req, res)
+  },
+  {
+    path: "/updateReplyLikes",
+    method: (req: Request, res: Response) => updateReplyLikes(req, res)
+  },
+]
+  
+routes.map((route) => {
+  router.post(route.path, dynamicLimiter(60), async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await addPost(req, res);
+      await route.method(req, res);
     } catch (error) {
       next(error);
     }
-  }
-);
+  })
+})
 
-router.post(
-  "/find",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await getPosts(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/findById",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await getPostById(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/updateLikes",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await updateLikes(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/updateViews",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await updateViews(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-
-router.post(
-  "/updateComments",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await addComment(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/updateReplies",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await addReply(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/updateCommentLikes",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await updateCommentLikes(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/updateReplyLikes",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await updateReplyLikes(req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
 
 export default router;
