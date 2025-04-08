@@ -86,20 +86,24 @@ export const updateViews = async (req, res) => {
     }
 };
 export const fetchComments = async (req, res) => {
-    const { postId, skip, limit } = req.body;
+    const { postId, skip, limit, localComments } = req.body;
     let hasMore;
     try {
         const post = await Posts.findOne({ postId: postId });
         if (!post)
             return res.status(404).json({ message: "Post not found" });
-        const comments = post.comments.slice(skip, limit);
-        if (post.comments[post.comments.length - 1].id === comments[comments.length - 1].id) {
-            hasMore = false;
+        const localCommentIds = localComments.map((comment) => comment.id);
+        const comments = post.comments.slice(skip, limit).filter(comment => !localCommentIds.includes(comment.id));
+        console.log(comments);
+        if (comments.length !== 0) {
+            if (post.comments[post.comments.length - 1].id === comments[comments.length - 1].id) {
+                hasMore = false;
+            }
+            else {
+                hasMore = true;
+            }
         }
-        else {
-            hasMore = true;
-        }
-        res.status(200).json({ comments, limit: limit + 2, hasMore });
+        res.status(200).json({ comments, limit: limit + 20, hasMore });
     }
     catch (error) {
         console.error("Error fetching comments:", error);
@@ -107,7 +111,7 @@ export const fetchComments = async (req, res) => {
     }
 };
 export const addComment = async (req, res) => {
-    const { postId, commentId, commentText, user, limit, skip } = req.body;
+    const { postId, commentId, commentText, user } = req.body;
     try {
         await Posts.updateOne({ postId }, {
             $push: {
