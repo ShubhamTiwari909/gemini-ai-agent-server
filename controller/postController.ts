@@ -10,16 +10,22 @@ export type User = {
 }
 
 export const getPosts = async (req: Request, res: Response) => {
-  const { email, userId, limit } = req.body;
+  const { email, userId, limit, page } = req.body;
+  const skip = (page - 1) * limit;
   let posts;
 
   try {
     if (limit) {
-      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).limit(limit)).reverse();
+      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).limit(limit)).reverse();
     } else {
-      posts = (await Posts.find({ "user.email": email, "user.userId": userId })).reverse();
+      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip)).reverse();
     }
-    res.json(posts); // Use json() instead of send() for sending JSON response
+     // Send response with pagination metadata
+    res.json({
+        data: posts,
+        currentPage: parseInt(page),
+        hasMore: posts.length === parseInt(limit), // Check if there are more items
+    });
   } catch (error) {
     console.error("Error getting posts:", error);
     res.status(500).json({ message: "Error retrieving posts" }); // Send structured error response
