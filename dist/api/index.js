@@ -5,9 +5,9 @@ import feedRoutes from "../routes/feed.js";
 import cors from "cors";
 import helmet from "helmet";
 import "dotenv/config";
-import { connectionWrapper } from "../middlewares/db-connection.js";
 import compression from "compression";
 import { customAuthMiddleware } from "../middlewares/api-auth.js";
+import connectDB from "../mongodb-connection.js";
 const app = express();
 app.use(helmet({
     contentSecurityPolicy: {
@@ -34,7 +34,6 @@ app.use(cors(corsOptions));
 app.use(customAuthMiddleware);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" })); // for parsing application/x-www-form-urlencoded
-app.use((req, res, next) => connectionWrapper(req, res, next));
 app.use(compression());
 // Routes
 app.get("/", async (_, res) => {
@@ -45,7 +44,8 @@ app.use("/users", usersRoutes);
 app.use("/feed", feedRoutes);
 // Start the server
 const PORT = Number(process.env.PORT) || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
+    await connectDB();
 });
 export default app;
