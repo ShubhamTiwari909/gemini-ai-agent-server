@@ -47,7 +47,7 @@ export const addPost = async (req, res) => {
             user,
             postId,
             prompt,
-            response,
+            response: responseType === "image" ? compressedImage : response,
             responseType,
             filePreview: compressedImage,
             createdAt: new Date().toISOString(),

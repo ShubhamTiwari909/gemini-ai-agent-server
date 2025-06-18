@@ -8,7 +8,6 @@ const imagekit = new ImageKit({
 const uploadImage = async (base64Image, email) => {
     try {
         const folderName = `${email.replaceAll(/[^a-zA-Z0-9]/g, "_")}/images`;
-        console.log(folderName);
         const result = await imagekit.upload({
             file: base64Image,
             fileName: folderName,
