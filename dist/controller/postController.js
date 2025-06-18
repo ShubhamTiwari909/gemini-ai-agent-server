@@ -42,7 +42,7 @@ export const getPostById = async (req, res) => {
 export const addPost = async (req, res) => {
     const { user, postId, prompt, response, responseType, filePreview, tags } = req.body;
     try {
-        const compressedImage = await compressBase64Image(filePreview, user, prompt);
+        const compressedImage = responseType === "image" ? await compressBase64Image(response, user) : await compressBase64Image(filePreview, user);
         const newPost = new Posts({
             user,
             postId,

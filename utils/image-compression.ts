@@ -8,7 +8,7 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT || "",
 })
 
-const uploadImage = async (base64Image: string, email: string, prompt: string) => {
+const uploadImage = async (base64Image: string, email: string) => {
   try {
     const folderName = `${email.replaceAll(/[^a-zA-Z0-9]/g, "_")}/images`
     console.log(folderName)
@@ -24,7 +24,7 @@ const uploadImage = async (base64Image: string, email: string, prompt: string) =
   }
 };
 
-export async function compressBase64Image(base64Image:string, user:User, prompt:string) {
+export async function compressBase64Image(base64Image:string, user:User) {
   try {
     // Split the Base64 string to separate metadata and content
     const [prefix, base64Data] = base64Image.split(",");
@@ -42,7 +42,7 @@ export async function compressBase64Image(base64Image:string, user:User, prompt:
     // Convert the compressed buffer back to a Base64 string
     const compressedBase64 = `${prefix},${compressedBuffer.toString("base64")}`;
     // Upload the compressed image to ImageKit
-    const uploadedUrl = await uploadImage(compressedBase64, user.email, prompt);
+    const uploadedUrl = await uploadImage(compressedBase64, user.email);
 
     return uploadedUrl
   } catch (error) {
