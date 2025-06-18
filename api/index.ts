@@ -8,7 +8,6 @@ import "dotenv/config";
 import { connectionWrapper } from "../middlewares/db-connection.js";
 import compression from "compression";
 import { customAuthMiddleware } from "../middlewares/api-auth.js";
-import connectDB from "../mongodb-connection.js";
 
 const app: Express = express();
 
