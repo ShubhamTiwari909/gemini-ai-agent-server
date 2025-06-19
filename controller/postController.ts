@@ -16,9 +16,9 @@ export const getPosts = async (req: Request, res: Response) => {
 
   try {
     if (limit) {
-      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).limit(limit)).reverse();
+      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).sort({ createdAt: -1 }).limit(limit));
     } else {
-      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip)).reverse();
+      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).sort({ createdAt: -1 }));
     }
      // Send response with pagination metadata
     res.json({
@@ -56,15 +56,13 @@ export const addPost = async (req: Request, res: Response) => {
   const { user, postId, prompt, response, responseType, filePreview, tags } =
     req.body;
   try {
-    const compressedImage = responseType === "image" ? await compressBase64Image(response, user) : await compressBase64Image(filePreview, user);
-
     const newPost = new Posts({
       user,
       postId,
       prompt,
-      response: responseType === "image" ? compressedImage : response,
+      response: responseType === "image" ? await compressBase64Image(response, user) : response,
       responseType,
-      filePreview: compressedImage,
+      filePreview: filePreview ? await compressBase64Image(filePreview, user) : '',
       createdAt: new Date().toISOString(),
       tags,
       likes:[],

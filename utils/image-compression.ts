@@ -1,4 +1,3 @@
-import sharp from "sharp";
 import ImageKit from "imagekit";
 import { User } from "../controller/postController";
 
@@ -8,13 +7,13 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT || "",
 })
 
-const uploadImage = async (base64Image: string, email: string) => {
+const uploadImage = async (base64Image: string, email: string, folderPrefix: string) => {
   try {
     const folderName = `${email.replaceAll(/[^a-zA-Z0-9]/g, "_")}/images`
     const result = await imagekit.upload({
       file: base64Image,
       fileName: folderName,
-      folder: `${email.replaceAll(/[^a-zA-Z0-9]/g, "_")}/images`, // Create a folder based on the user's email
+      folder: folderPrefix, // Create a folder based on the user's email
     });
 
     return result.url;
@@ -28,20 +27,15 @@ export async function compressBase64Image(base64Image:string, user:User) {
     // Split the Base64 string to separate metadata and content
     const [prefix, base64Data] = base64Image.split(",");
 
+    const folderPrefix = prefix.includes("image") ? `${user.email.replaceAll(/[^a-zA-Z0-9]/g, "_")}/images` : `${user.email.replaceAll(/[^a-zA-Z0-9]/g, "_")}/files`;
+
     // Decode the Base64 string to a buffer
     const imageBuffer = Buffer.from(base64Data, "base64");
 
-    // Compress the image using Sharp
-    const compressedBuffer = await sharp(imageBuffer)
-      .resize({ width: 800 }) // Resize to a maximum width of 800px
-      .jpeg({ quality: 80 }) // Compress with JPEG quality of 80%
-      .png({ quality: 80 }) // Compress with PNG quality of 80%
-      .toBuffer();
-
     // Convert the compressed buffer back to a Base64 string
-    const compressedBase64 = `${prefix},${compressedBuffer.toString("base64")}`;
+    const compressedBase64 = `${prefix},${imageBuffer.toString("base64")}`;
     // Upload the compressed image to ImageKit
-    const uploadedUrl = await uploadImage(compressedBase64, user.email);
+    const uploadedUrl = await uploadImage(compressedBase64, user.email, folderPrefix);
 
     return uploadedUrl
   } catch (error) {
