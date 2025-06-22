@@ -59,6 +59,7 @@ export const postSchema = new mongoose.Schema({
     tags: [String],
     likes: [User],
     views: [User],
+    downloads: Number,
     comments: {
         type: [CommentSchema],
         default: []

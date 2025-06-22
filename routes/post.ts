@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from "express";
-import { addPost, getPosts, getPostById, updateLikes, updateViews, addComment, addReply, updateCommentLikes, updateReplyLikes, fetchComments } from "../controller/postController.js";
+import { addPost, getPosts, getPostById, updateLikes, updateViews, addComment, addReply, updateCommentLikes, updateReplyLikes, fetchComments, updateDownloads } from "../controller/postController.js";
 import { dynamicLimiter } from "../middlewares/rate-limiting.js";
 
 const router: Router = express.Router();
@@ -43,6 +43,10 @@ const routes = [
   {
     path: "/updateReplyLikes",
     method: (req: Request, res: Response) => updateReplyLikes(req, res)
+  },
+  {
+    path: "/updateDownloads",
+    method: (req: Request, res: Response) => updateDownloads(req, res)
   },
 ]
   
