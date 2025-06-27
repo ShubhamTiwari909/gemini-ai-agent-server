@@ -2,15 +2,15 @@ import "dotenv/config";
 import { compressBase64Image } from "../utils/image-compression.js";
 import { Posts } from "../schemas/Post.js";
 export const getPosts = async (req, res) => {
-    const { email, userId, limit, page } = req.body;
+    const { userId, limit, page } = req.body;
     const skip = (page - 1) * limit;
     let posts;
     try {
         if (limit) {
-            posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).sort({ createdAt: -1 }).limit(limit));
+            posts = (await Posts.find({ "user.userId": userId }).skip(skip).sort({ createdAt: -1 }).limit(limit));
         }
         else {
-            posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).sort({ createdAt: -1 }));
+            posts = (await Posts.find({ "user.userId": userId }).skip(skip).sort({ createdAt: -1 }));
         }
         // Send response with pagination metadata
         res.json({

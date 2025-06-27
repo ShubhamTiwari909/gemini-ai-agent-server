@@ -10,15 +10,15 @@ export type User = {
 }
 
 export const getPosts = async (req: Request, res: Response) => {
-  const { email, userId, limit, page } = req.body;
+  const { userId, limit, page } = req.body;
   const skip = (page - 1) * limit;
   let posts;
 
   try {
     if (limit) {
-      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).sort({ createdAt: -1 }).limit(limit));
+      posts = (await Posts.find({"user.userId": userId }).skip(skip).sort({ createdAt: -1 }).limit(limit));
     } else {
-      posts = (await Posts.find({ "user.email": email, "user.userId": userId }).skip(skip).sort({ createdAt: -1 }));
+      posts = (await Posts.find({"user.userId": userId }).skip(skip).sort({ createdAt: -1 }));
     }
      // Send response with pagination metadata
     res.json({
@@ -126,7 +126,6 @@ export const fetchComments = async (req: Request, res: Response) => {
     const localCommentIds = localComments.map((comment:{id:string}) => comment.id);
 
     const comments = post.comments.slice(skip, limit).filter(comment => !localCommentIds.includes(comment.id))
-    console.log(comments)
 
     if(comments.length !== 0) {
       if(post.comments[post.comments.length - 1].id === comments[comments.length - 1].id){
