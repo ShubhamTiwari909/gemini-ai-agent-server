@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+const { BigInt } = mongoose.Schema.Types;
 export const User = {
     name: {
         type: String,
@@ -9,6 +10,10 @@ export const User = {
         required: true,
     },
     image: {
+        type: String,
+        required: true,
+    },
+    userId: {
         type: String,
         required: true,
     },
@@ -32,11 +37,7 @@ const CommentSchema = new mongoose.Schema({
     }
 }, { _id: false });
 export const postSchema = new mongoose.Schema({
-    user: { ...User,
-        userId: {
-            type: String,
-            required: true,
-        } },
+    user: User,
     postId: {
         type: String,
         unique: true,
@@ -59,7 +60,10 @@ export const postSchema = new mongoose.Schema({
     tags: [String],
     likes: [User],
     views: [User],
-    downloads: Number,
+    downloads: {
+        type: BigInt,
+        default: 0
+    },
     comments: {
         type: [CommentSchema],
         default: []
