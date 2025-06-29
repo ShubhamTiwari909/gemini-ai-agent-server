@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-const { BigInt } = mongoose.Schema.Types;
 
 export const User = {
   name: {
@@ -65,10 +64,7 @@ export const postSchema = new mongoose.Schema({
   tags:[String],
   likes:[User],
   views:[User],
-  downloads: {
-    type: BigInt,
-    default: 0
-  },
+  downloads: Number,
   comments: {
     type: [CommentSchema],
     default: []

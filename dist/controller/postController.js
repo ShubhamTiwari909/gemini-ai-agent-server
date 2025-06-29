@@ -97,7 +97,6 @@ export const fetchComments = async (req, res) => {
             return res.status(404).json({ message: "Post not found" });
         const localCommentIds = localComments.map((comment) => comment.id);
         const comments = post.comments.slice(skip, limit).filter(comment => !localCommentIds.includes(comment.id));
-        console.log(comments);
         if (comments.length !== 0) {
             if (post.comments[post.comments.length - 1].id === comments[comments.length - 1].id) {
                 hasMore = false;
