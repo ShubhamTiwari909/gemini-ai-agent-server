@@ -54,9 +54,18 @@ app.use("/feed", feedRoutes);
 // Start the server
 const PORT = Number(process.env.PORT) || 5000;
 
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`);
-  await connectionWrapper();
-});
+const startServer = async () => {
+  try {
+    await connectionWrapper(); // ✅ Connect DB first
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to connect to DB. Server not started.");
+    process.exit(1);
+  }
+};
+
+startServer();
 
 export default app;

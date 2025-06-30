@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from "express";
 import connectDB from "../mongodb-connection.js";
 
 export const connectionWrapper = async () => {
