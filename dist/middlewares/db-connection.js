@@ -1,10 +1,10 @@
 import connectDB from "../mongodb-connection.js";
-export const connectionWrapper = async (_, res, next) => {
+export const connectionWrapper = async () => {
     const connection = await connectDB();
     if (connection) {
-        next();
+        return connection;
     }
     else {
-        res.status(500).send("MongoDB Connection Failed!");
+        throw new Error("Failed to connect to the database");
     }
 };

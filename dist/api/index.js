@@ -33,7 +33,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(customAuthMiddleware);
 app.use(express.json({ limit: "50mb" }));
-app.use((req, res, next) => connectionWrapper(req, res, next));
 app.use(express.urlencoded({ extended: true, limit: "50mb" })); // for parsing application/x-www-form-urlencoded
 app.use(compression());
 // Routes
@@ -45,7 +44,8 @@ app.use("/users", usersRoutes);
 app.use("/feed", feedRoutes);
 // Start the server
 const PORT = Number(process.env.PORT) || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
+    await connectionWrapper();
 });
 export default app;
