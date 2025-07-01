@@ -1,23 +1,19 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { dynamicLimiter } from "../middlewares/rate-limiting.js";
-import { getFeed, getFeedBySearch, getFeedByTags } from "../controller/feedController.js";
+import express, { Router, Request, Response, NextFunction } from 'express';
+import { dynamicLimiter } from '../middlewares/rate-limiting.js';
+import { getFeed, getFeedBySearch, getFeedByTags } from '../controller/feedController.js';
 
 const router: Router = express.Router();
 
-router.post(
-  "/",
-  dynamicLimiter(120),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await getFeed(req, res);
-    } catch (error) {
-      next(error);
-    }
+router.post('/', dynamicLimiter(120), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await getFeed(req, res);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 router.post(
-  "/search",
+  '/search',
   dynamicLimiter(120),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -29,7 +25,7 @@ router.post(
 );
 
 router.post(
-  "/search/tags",
+  '/search/tags',
   dynamicLimiter(120),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -39,6 +35,5 @@ router.post(
     }
   }
 );
-
 
 export default router;

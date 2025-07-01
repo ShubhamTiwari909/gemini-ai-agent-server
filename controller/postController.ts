@@ -1,13 +1,13 @@
-import "dotenv/config";
-import { Request, Response } from "express";
-import { compressBase64Image } from "../utils/image-compression.js";
-import { Posts } from "../schemas/Post.js";
+import 'dotenv/config';
+import { Request, Response } from 'express';
+import { compressBase64Image } from '../utils/image-compression.js';
+import { Posts } from '../schemas/Post.js';
 
 export type User = {
   name: string;
   email: string;
   image: string;
-}
+};
 
 export const getPosts = async (req: Request, res: Response) => {
   const { userId, limit, page } = req.body;
@@ -16,19 +16,22 @@ export const getPosts = async (req: Request, res: Response) => {
 
   try {
     if (limit) {
-      posts = (await Posts.find({"user.userId": userId }).skip(skip).sort({ createdAt: -1 }).limit(limit));
+      posts = await Posts.find({ 'user.userId': userId })
+        .skip(skip)
+        .sort({ createdAt: -1 })
+        .limit(limit);
     } else {
-      posts = (await Posts.find({"user.userId": userId }).skip(skip).sort({ createdAt: -1 }));
+      posts = await Posts.find({ 'user.userId': userId }).skip(skip).sort({ createdAt: -1 });
     }
-     // Send response with pagination metadata
+    // Send response with pagination metadata
     res.json({
-        data: posts,
-        currentPage: parseInt(page),
-        hasMore: posts.length === parseInt(limit), // Check if there are more items
+      data: posts,
+      currentPage: parseInt(page),
+      hasMore: posts.length === parseInt(limit), // Check if there are more items
     });
   } catch (error) {
-    console.error("Error getting posts:", error);
-    res.status(500).json({ message: "Error retrieving posts" }); // Send structured error response
+    console.error('Error getting posts:', error);
+    res.status(500).json({ message: 'Error retrieving posts' }); // Send structured error response
   }
 };
 
@@ -39,109 +42,106 @@ export const getPostById = async (req: Request, res: Response) => {
     const post = await Posts.findOne({ _id: id }).lean();
 
     const comments = post?.comments.slice(skip, skip + limit);
-    
+
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(404).json({ message: 'Post not found' });
     }
 
-    res.json({post, comments, commentsLength: post?.comments.length});
+    res.json({ post, comments, commentsLength: post?.comments.length });
   } catch (error) {
-    console.error("Error getting post:", error);
-    res.status(500).json({ message: "Error retrieving post" });
+    console.error('Error getting post:', error);
+    res.status(500).json({ message: 'Error retrieving post' });
   }
 };
 
-
 export const addPost = async (req: Request, res: Response) => {
-  const { user, postId, prompt, response, responseType, filePreview, tags } =
-    req.body;
+  const { user, postId, prompt, response, responseType, filePreview, tags } = req.body;
   try {
     const newPost = new Posts({
       user,
       postId,
       prompt,
-      response: responseType === "image" ? await compressBase64Image(response, user) : response,
+      response: responseType === 'image' ? await compressBase64Image(response, user) : response,
       responseType,
       filePreview: filePreview ? await compressBase64Image(filePreview, user) : '',
       createdAt: new Date().toISOString(),
       tags,
-      likes:[],
-      views:[],
-      comments:[]
+      likes: [],
+      views: [],
+      comments: [],
     });
     const result = await newPost.save();
     res.json({ newPost: result });
   } catch (error) {
-    console.error("Error adding post:", error);
-    res.status(500).send("Error saving post");
+    console.error('Error adding post:', error);
+    res.status(500).send('Error saving post');
   }
 };
 
 export const updateLikes = async (req: Request, res: Response) => {
   const { postId, user } = req.body;
 
-  const post = await Posts.find({postId:postId, "likes.email":user.email});
-  if(post.length === 0){
+  const post = await Posts.find({ postId: postId, 'likes.email': user.email });
+  if (post.length === 0) {
     const updatedPost = await Posts.findOneAndUpdate(
       { postId: postId },
       { $push: { likes: user } },
       { new: true } // or `returnDocument: 'after'` if using native MongoDB
     );
     res.json({ likes: updatedPost?.likes });
-  }
-  else {
+  } else {
     const updatedPost = await Posts.findOneAndUpdate(
       { postId: postId },
       { $pull: { likes: user } },
       { new: true }
     );
-  
+
     res.json({ likes: updatedPost?.likes });
   }
-}
+};
 
 export const updateViews = async (req: Request, res: Response) => {
   const { postId, user } = req.body;
-  const post = await Posts.find({postId:postId, "views.email":user.email});
-  if(post.length === 0){
+  const post = await Posts.find({ postId: postId, 'views.email': user.email });
+  if (post.length === 0) {
     const updatedPost = await Posts.findOneAndUpdate(
       { postId: postId },
       { $addToSet: { views: user } },
       { new: true } // or `returnDocument: 'after'` if using native MongoDB
     );
     res.json({ views: updatedPost?.views });
+  } else {
+    res.json({ message: 'Already viewed' });
   }
-  else {
-    res.json({ message: "Already viewed" });
-  }
-}
+};
 
 export const fetchComments = async (req: Request, res: Response) => {
   const { postId, skip, limit, localComments } = req.body;
-  let hasMore
+  let hasMore;
   try {
     const post = await Posts.findOne({ postId: postId });
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
 
-    const localCommentIds = localComments.map((comment:{id:string}) => comment.id);
+    const localCommentIds = localComments.map((comment: { id: string }) => comment.id);
 
-    const comments = post.comments.slice(skip, limit).filter(comment => !localCommentIds.includes(comment.id))
+    const comments = post.comments
+      .slice(skip, limit)
+      .filter(comment => !localCommentIds.includes(comment.id));
 
-    if(comments.length !== 0) {
-      if(post.comments[post.comments.length - 1].id === comments[comments.length - 1].id){
-        hasMore = false
-      }
-      else{
-        hasMore = true
+    if (comments.length !== 0) {
+      if (post.comments[post.comments.length - 1].id === comments[comments.length - 1].id) {
+        hasMore = false;
+      } else {
+        hasMore = true;
       }
     }
 
     res.status(200).json({ comments, limit: limit + 20, hasMore });
   } catch (error) {
-    console.error("Error fetching comments:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ message: 'Server error' });
   }
-}
+};
 
 export const addComment = async (req: Request, res: Response) => {
   const { postId, commentId, commentText, user } = req.body;
@@ -155,10 +155,10 @@ export const addComment = async (req: Request, res: Response) => {
             id: commentId,
             text: commentText,
             user,
-            createdAt:new Date().toISOString(),
-            replies: [] // optional — will default to []
-          }
-        }
+            createdAt: new Date().toISOString(),
+            replies: [], // optional — will default to []
+          },
+        },
       },
       { new: true }
     );
@@ -167,24 +167,22 @@ export const addComment = async (req: Request, res: Response) => {
 
     res.status(200).json({ comment: [comment], commentsLength: updatedPost?.comments.length });
   } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error adding comment:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
 export const updateCommentLikes = async (req: Request, res: Response) => {
-  const { postId, commentId, user} = req.body;
+  const { postId, commentId, user } = req.body;
 
   try {
     const post = await Posts.findOne({ postId });
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
 
-    const comment = post.comments.find((comment) => comment.id === commentId);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
+    const comment = post.comments.find(comment => comment.id === commentId);
+    if (!comment) return res.status(404).json({ message: 'Comment not found' });
 
-    const alreadyLiked = comment.likes?.some(
-      (likedUser: any) => likedUser.email === user.email
-    );
+    const alreadyLiked = comment.likes?.some(likedUser => likedUser.email === user.email);
 
     if (alreadyLiked) {
       comment.likes.pull(user);
@@ -197,8 +195,8 @@ export const updateCommentLikes = async (req: Request, res: Response) => {
 
     return res.status(200).json({ comment });
   } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error adding comment:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -207,17 +205,15 @@ export const updateReplyLikes = async (req: Request, res: Response) => {
 
   try {
     const post = await Posts.findOne({ postId });
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
 
-    const comment = post.comments.find((comment) => comment.id === commentId);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
+    const comment = post.comments.find(comment => comment.id === commentId);
+    if (!comment) return res.status(404).json({ message: 'Comment not found' });
 
-    const reply = comment.replies.find((reply) => reply.id === replyId);
-    if (!reply) return res.status(404).json({ message: "Reply not found" });
+    const reply = comment.replies.find(reply => reply.id === replyId);
+    if (!reply) return res.status(404).json({ message: 'Reply not found' });
 
-    const alreadyLiked = reply.likes?.some(
-      (likedUser:User) => likedUser.email === user.email
-    );
+    const alreadyLiked = reply.likes?.some((likedUser: User) => likedUser.email === user.email);
 
     if (alreadyLiked) {
       reply.likes.pull(user);
@@ -230,8 +226,8 @@ export const updateReplyLikes = async (req: Request, res: Response) => {
 
     return res.status(200).json({ comments: post.comments });
   } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error adding comment:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -242,29 +238,29 @@ export const addReply = async (req: Request, res: Response) => {
     const updatedPost = await Posts.findOneAndUpdate(
       {
         postId,
-        "comments.id": commentId
+        'comments.id': commentId,
       },
       {
         $push: {
-          "comments.$.replies": {
+          'comments.$.replies': {
             id: replyId,
             text: replyText,
             user,
-            createdAt:new Date().toISOString()
-          }
-        }
+            createdAt: new Date().toISOString(),
+          },
+        },
       },
       { new: true }
     );
 
     if (!updatedPost) {
-      return res.status(404).json({ message: "Post or comment not found" });
+      return res.status(404).json({ message: 'Post or comment not found' });
     }
 
     res.status(200).json({ comments: updatedPost.comments });
   } catch (error) {
-    console.error("Error adding reply:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error adding reply:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -276,11 +272,11 @@ export const updateDownloads = async (req: Request, res: Response) => {
       { $inc: { downloads: 1 } },
       { new: true }
     );
-    if (!updatedPost) return res.status(404).json({ message: "Post not found" });
+    if (!updatedPost) return res.status(404).json({ message: 'Post not found' });
 
     res.status(200).json({ downloads: updatedPost.downloads });
   } catch (error) {
-    console.error("Error updating downloads:", error);
-    res.status(500).json({ message: "Error retrieving post" });
+    console.error('Error updating downloads:', error);
+    res.status(500).json({ message: 'Error retrieving post' });
   }
 };
