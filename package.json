@@ -6,7 +6,11 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/api/index.js",
-    "dev": "nodemon api/index.ts"
+    "dev": "nodemon api/index.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "author": "",
   "license": "ISC",
@@ -25,13 +29,23 @@
     "vercel": "^39.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.30.0",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.7",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
     "concurrently": "^9.1.2",
+    "eslint": "^9.30.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "globals": "^16.2.0",
+    "husky": "^9.1.7",
     "nodemon": "^3.1.9",
+    "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.35.1"
   }
 }
