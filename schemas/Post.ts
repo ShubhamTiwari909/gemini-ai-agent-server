@@ -77,6 +77,9 @@ export const postSchema = new mongoose.Schema({
     type: [CommentSchema],
     default: [],
   },
+  toggle: {
+    comments: Boolean
+  }
 });
 
 export const Posts = mongoose.model('posts', postSchema);

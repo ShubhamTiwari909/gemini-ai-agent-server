@@ -11,6 +11,7 @@ import {
   updateReplyLikes,
   fetchComments,
   updateDownloads,
+  updateCommentsToggle,
 } from '../controller/postController.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
 
@@ -60,6 +61,10 @@ const routes = [
   {
     path: '/updateDownloads',
     method: (req: Request, res: Response) => updateDownloads(req, res),
+  },
+   {
+    path: '/toggle/comments',
+    method: (req: Request, res: Response) => updateCommentsToggle(req, res),
   },
 ];
 
