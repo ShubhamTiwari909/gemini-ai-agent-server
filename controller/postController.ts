@@ -281,7 +281,13 @@ export const updateDownloads = async (req: Request, res: Response) => {
   }
 };
 
-export const updateToggle = async (req: Request, res: Response, postId: string, feature: string, value: boolean | string) => {
+export const updateToggle = async (
+  req: Request,
+  res: Response,
+  postId: string,
+  feature: string,
+  value: boolean | string
+) => {
   try {
     const updatedPost = await Posts.findOneAndUpdate(
       { postId },
@@ -301,4 +307,4 @@ export const updateCommentsToggle = async (req: Request, res: Response) => {
   const { postId, value } = req.body;
 
   await updateToggle(req, res, postId, 'comments', value);
-}
+};
