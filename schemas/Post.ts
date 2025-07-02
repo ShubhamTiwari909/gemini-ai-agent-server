@@ -79,6 +79,7 @@ export const postSchema = new mongoose.Schema({
   },
   toggle: {
     comments: Boolean,
+    downloads: Boolean,
   },
 });
 

@@ -55,7 +55,7 @@ export const getPostById = async (req: Request, res: Response) => {
 };
 
 export const addPost = async (req: Request, res: Response) => {
-  const { user, postId, prompt, response, responseType, filePreview, tags } = req.body;
+  const { user, postId, prompt, response, responseType, filePreview, tags, toggle } = req.body;
   try {
     const newPost = new Posts({
       user,
@@ -69,6 +69,7 @@ export const addPost = async (req: Request, res: Response) => {
       likes: [],
       views: [],
       comments: [],
+      toggle,
     });
     const result = await newPost.save();
     res.json({ newPost: result });
@@ -282,7 +283,7 @@ export const updateDownloads = async (req: Request, res: Response) => {
 };
 
 export const updateToggle = async (
-  req: Request,
+  _: Request,
   res: Response,
   postId: string,
   feature: string,
@@ -291,9 +292,10 @@ export const updateToggle = async (
   try {
     const updatedPost = await Posts.findOneAndUpdate(
       { postId },
-      { toggle: { [feature]: value } },
+      { $set: { [`toggle.${feature}`]: value } },
       { new: true }
     );
+
     if (!updatedPost) return res.status(404).json({ message: 'Post not found' });
 
     res.status(200).json({ toggle: updatedPost.toggle });
@@ -307,4 +309,10 @@ export const updateCommentsToggle = async (req: Request, res: Response) => {
   const { postId, value } = req.body;
 
   await updateToggle(req, res, postId, 'comments', value);
+};
+
+export const updateDownloadToggle = async (req: Request, res: Response) => {
+  const { postId, value } = req.body;
+
+  await updateToggle(req, res, postId, 'downloads', value);
 };
