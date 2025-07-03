@@ -1,5 +1,5 @@
-import { Users } from "../../schemas/Users.js";
-import { Request, Response } from "express";
+import { Users } from '../../schemas/Users.js';
+import { Request, Response } from 'express';
 export const getUserByEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: 'Bad Request - email is required' });

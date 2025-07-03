@@ -1,5 +1,5 @@
-import { Posts } from "../../schemas/Post.js";
-import { Request, Response } from "express";
+import { Posts } from '../../schemas/Post.js';
+import { Request, Response } from 'express';
 export const updateDownloads = async (req: Request, res: Response) => {
   try {
     const { postId } = req.body;

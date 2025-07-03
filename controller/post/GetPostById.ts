@@ -1,5 +1,5 @@
-import { Posts } from "../../schemas/Post.js";
-import { Request, Response } from "express";
+import { Posts } from '../../schemas/Post.js';
+import { Request, Response } from 'express';
 
 export const getPostById = async (req: Request, res: Response) => {
   const { id, limit, skip } = req.body;

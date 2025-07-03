@@ -1,6 +1,6 @@
-import { Users } from "../../schemas/Users.js";
-import { Request, Response } from "express";
-import { checkIfUserExists } from "../../utils/checkIfUserExist.js";
+import { Users } from '../../schemas/Users.js';
+import { Request, Response } from 'express';
+import { checkIfUserExists } from '../../utils/checkIfUserExist.js';
 
 export const addUser = async (req: Request, res: Response) => {
   const { userId, name, email, image } = req.body;
@@ -20,4 +20,4 @@ export const addUser = async (req: Request, res: Response) => {
     console.error(err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-}
+};

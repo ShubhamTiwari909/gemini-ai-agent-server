@@ -1,5 +1,5 @@
-import { Posts } from "../../schemas/Post.js";
-import { Request, Response } from "express";
+import { Posts } from '../../schemas/Post.js';
+import { Request, Response } from 'express';
 
 export const updateToggle = async (
   _: Request,
@@ -29,7 +29,6 @@ export const updateCommentsToggle = async (req: Request, res: Response) => {
 
   await updateToggle(req, res, postId, 'comments', value);
 };
-
 
 export const updateDownloadToggle = async (req: Request, res: Response) => {
   const { postId, value } = req.body;

@@ -1,6 +1,6 @@
-import { Posts } from "../../schemas/Post.js";
-import { Request, Response } from "express";
-import { compressBase64Image } from "../../utils/image-compression.js";
+import { Posts } from '../../schemas/Post.js';
+import { Request, Response } from 'express';
+import { compressBase64Image } from '../../utils/image-compression.js';
 
 export const addPost = async (req: Request, res: Response) => {
   const { user, postId, prompt, response, responseType, filePreview, tags, toggle } = req.body;

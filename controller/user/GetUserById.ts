@@ -1,5 +1,5 @@
-import { Users } from "../../schemas/Users.js";
-import { Request, Response } from "express";
+import { Users } from '../../schemas/Users.js';
+import { Request, Response } from 'express';
 
 export const getUserById = async (req: Request, res: Response) => {
   const { userId } = req.body;

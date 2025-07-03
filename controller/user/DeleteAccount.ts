@@ -1,7 +1,7 @@
-import { Posts } from "../../schemas/Post.js";
-import { Users } from "../../schemas/Users.js";
-import { checkIfUserExists } from "../../utils/checkIfUserExist.js";
-import { Request, Response } from "express";
+import { Posts } from '../../schemas/Post.js';
+import { Users } from '../../schemas/Users.js';
+import { checkIfUserExists } from '../../utils/checkIfUserExist.js';
+import { Request, Response } from 'express';
 
 export const deleteAccount = async (req: Request, res: Response) => {
   const { userId } = req.body;

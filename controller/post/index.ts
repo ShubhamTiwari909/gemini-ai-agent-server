@@ -3,7 +3,7 @@ export { addPost } from './AddPost.js';
 export { getPostById } from './GetPostById.js';
 export { getPosts } from './GetPosts.js';
 export { updateLikes } from './UpdateLikes.js';
-export { updateViews } from './UpdateViews.js'; 
+export { updateViews } from './UpdateViews.js';
 export { fetchComments, updateCommentLikes, addComment } from './UpdateComments.js';
 export { updateDownloads } from './UpdateDownload.js';
 export { addReply, updateReplyLikes } from './UpdateCommentReply.js';

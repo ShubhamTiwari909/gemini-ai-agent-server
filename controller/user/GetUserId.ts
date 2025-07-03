@@ -1,6 +1,6 @@
-import { Users } from "../../schemas/Users.js";
-import { Request, Response } from "express";
-import { encrypt } from "../../utils/hybrid-encryption.js";
+import { Users } from '../../schemas/Users.js';
+import { Request, Response } from 'express';
+import { encrypt } from '../../utils/hybrid-encryption.js';
 
 export const getUserId = async (req: Request, res: Response) => {
   const { email } = req.body;
