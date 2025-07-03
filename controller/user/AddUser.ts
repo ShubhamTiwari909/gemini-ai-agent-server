@@ -8,8 +8,8 @@ export const addUser = async (req: Request, res: Response) => {
   if (!userId || !name || !email || !image)
     return res.status(400).json({ message: 'Bad Request - userId, name and email is required' });
 
-  if (await checkIfUserExists(userId)) {
-    return res.status(200).json({ message: 'User already exists' });
+  if (await checkIfUserExists(email)) {
+    return res.status(200).json({ message: 'User already exists', email });
   }
 
   try {

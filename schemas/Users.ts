@@ -19,8 +19,19 @@ export const UserSchema = {
     type: String,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 };
 
 const userSchema = new mongoose.Schema(UserSchema);
+
+userSchema.pre('save', function (next) {
+  if (!this.createdAt) {
+    this.createdAt = new Date();
+  }
+  next();
+});
 
 export const Users = mongoose.model('users', userSchema);
