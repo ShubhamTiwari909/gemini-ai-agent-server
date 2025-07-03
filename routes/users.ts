@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
-import { addUser, getUserByEmail, getUserById, getUserId } from '../controller/usersController.js';
+import { addUser, deleteAccount, getUserByEmail, getUserById, getUserId } from '../controller/usersController.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
 
 const router: Router = express.Router();
@@ -31,6 +31,14 @@ router.post('/findById', async (req: Request, res: Response, next: NextFunction)
 router.post('/findUserByEmail', async (req: Request, res: Response, next: NextFunction) => {
   try {
     await getUserByEmail(req, res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/deleteAccount', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await deleteAccount(req, res);
   } catch (error) {
     next(error);
   }
