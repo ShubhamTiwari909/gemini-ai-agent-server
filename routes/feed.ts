@@ -1,6 +1,6 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
-import { getFeed, getFeedBySearch, getFeedByTags } from '../controller/feedController.js';
+import { getFeed, getFeedBySearch, getFeedByTags } from '../controller/feed/index.js';
 
 const router: Router = express.Router();
 

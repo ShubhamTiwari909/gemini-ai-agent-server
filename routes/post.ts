@@ -13,7 +13,7 @@ import {
   updateDownloads,
   updateCommentsToggle,
   updateDownloadToggle,
-} from '../controller/postController.js';
+} from '../controller/post/index.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
 
 const router: Router = express.Router();

@@ -5,7 +5,7 @@ import {
   getUserByEmail,
   getUserById,
   getUserId,
-} from '../controller/usersController.js';
+} from '../controller/user/index.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
 
 const router: Router = express.Router();

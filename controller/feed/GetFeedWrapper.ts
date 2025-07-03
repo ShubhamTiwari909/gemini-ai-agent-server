@@ -1,7 +1,7 @@
+import { Posts, postSchema } from '../../schemas/Post.js';
+import type { FilterQuery } from 'mongoose';
 import 'dotenv/config';
 import { Request, Response } from 'express';
-import { Posts, postSchema } from '../schemas/Post.js';
-import { FilterQuery } from 'mongoose';
 
 export const getFeedWrapper = async (
   req: Request,
@@ -29,20 +29,4 @@ export const getFeedWrapper = async (
     console.error('Error getting posts:', error);
     res.status(500).json({ message: 'Error retrieving posts' });
   }
-};
-
-export const getFeed = async (req: Request, res: Response) => {
-  getFeedWrapper(req, res, {});
-};
-
-export const getFeedBySearch = async (req: Request, res: Response) => {
-  const { search } = req.body;
-  const filter = { prompt: { $regex: search.split(' ').join('.*'), $options: 'i' } };
-  getFeedWrapper(req, res, filter);
-};
-
-export const getFeedByTags = async (req: Request, res: Response) => {
-  const { tag } = req.body;
-  const filter = { tags: { $in: [tag] } };
-  getFeedWrapper(req, res, filter);
 };

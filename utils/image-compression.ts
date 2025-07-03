@@ -1,11 +1,17 @@
 import ImageKit from 'imagekit';
-import { User } from '../controller/postController';
 
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY || '',
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY || '',
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT || '',
 });
+
+type User = {
+  name: string;
+  email: string;
+  image: string;
+  userId: string;
+};
 
 const uploadImage = async (base64Image: string, email: string, folderPrefix: string) => {
   try {
