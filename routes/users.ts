@@ -1,5 +1,11 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
-import { addUser, deleteAccount, getUserByEmail, getUserById, getUserId } from '../controller/usersController.js';
+import {
+  addUser,
+  deleteAccount,
+  getUserByEmail,
+  getUserById,
+  getUserId,
+} from '../controller/usersController.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
 
 const router: Router = express.Router();

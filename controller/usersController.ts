@@ -81,12 +81,11 @@ export const deleteAccount = async (req: Request, res: Response) => {
     const userExists = await checkIfExists(userId);
     if (!userExists) return res.status(404).json({ message: 'User not found' });
 
-    const posts = await Posts.deleteMany({ 'user.userId': userId  });
+    const posts = await Posts.deleteMany({ 'user.userId': userId });
     const result = await Users.deleteOne({ userId });
     res.status(200).json({ message: 'User deleted', result, posts });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-}
+};
