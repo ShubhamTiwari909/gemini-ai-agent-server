@@ -15,6 +15,7 @@ import {
   updateDownloadToggle,
 } from '../controller/post/index.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
+import { deletePost } from '../controller/post/DeletePost.js';
 
 const router: Router = express.Router();
 
@@ -22,6 +23,10 @@ const routes = [
   {
     path: '/add',
     method: (req: Request, res: Response) => addPost(req, res),
+  },
+  {
+    path: '/delete',
+    method: (req: Request, res: Response) => deletePost(req, res),
   },
   {
     path: '/find',
