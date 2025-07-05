@@ -16,6 +16,7 @@ import {
 } from '../controller/post/index.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
 import { deletePost } from '../controller/post/DeletePost.js';
+import { updatePostPrompt } from '../controller/post/UpdatePost.js';
 
 const router: Router = express.Router();
 
@@ -27,6 +28,10 @@ const routes = [
   {
     path: '/delete',
     method: (req: Request, res: Response) => deletePost(req, res),
+  },
+  {
+    path: '/update/title',
+    method: (req: Request, res: Response) => updatePostPrompt(req, res),
   },
   {
     path: '/find',
