@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import postRoutes from '../routes/post.js';
 import usersRoutes from '../routes/users.js';
 import feedRoutes from '../routes/feed.js';
+import pollsRoutes from '../routes/polls.js';
 import cors from 'cors';
 import helmet from 'helmet';
 import 'dotenv/config';
@@ -50,6 +51,7 @@ app.get('/', async (_: Request, res: Response) => {
 app.use('/posts', postRoutes);
 app.use('/users', usersRoutes);
 app.use('/feed', feedRoutes);
+app.use('/polls', pollsRoutes);
 
 // Start the server
 const PORT = Number(process.env.PORT) || 5000;
