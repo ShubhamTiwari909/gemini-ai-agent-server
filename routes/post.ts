@@ -80,7 +80,7 @@ const postRoutes = [
 ];
 
 const deleteRoutes = [
-   {
+  {
     path: '/delete',
     method: (req: Request, res: Response) => deletePost(req, res),
   },
@@ -88,7 +88,7 @@ const deleteRoutes = [
     path: '/delete/all',
     method: (req: Request, res: Response) => deleteAllPosts(req, res),
   },
-]
+];
 
 postRoutes.map(route => {
   router.post(
