@@ -4,11 +4,11 @@ import { checkIfUserExists } from '../../utils/checkIfUserExist.js';
 import { Request, Response } from 'express';
 
 export const deleteAccount = async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const { userId, email } = req.body;
   if (!userId) return res.status(400).json({ message: 'Bad Request - user id is required' });
 
   try {
-    const userExists = await checkIfUserExists(userId);
+    const userExists = await checkIfUserExists(email);
     if (!userExists) return res.status(404).json({ message: 'User not found' });
 
     const posts = await Posts.deleteMany({ 'user.userId': userId });

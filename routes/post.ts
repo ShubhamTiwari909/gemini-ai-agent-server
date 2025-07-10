@@ -15,19 +15,15 @@ import {
   updateDownloadToggle,
 } from '../controller/post/index.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
-import { deletePost } from '../controller/post/DeletePost.js';
+import { deleteAllPosts, deletePost } from '../controller/post/DeletePost.js';
 import { updatePostPrompt } from '../controller/post/UpdatePost.js';
 
 const router: Router = express.Router();
 
-const routes = [
+const postRoutes = [
   {
     path: '/add',
     method: (req: Request, res: Response) => addPost(req, res),
-  },
-  {
-    path: '/delete',
-    method: (req: Request, res: Response) => deletePost(req, res),
   },
   {
     path: '/update/title',
@@ -83,8 +79,33 @@ const routes = [
   },
 ];
 
-routes.map(route => {
+const deleteRoutes = [
+   {
+    path: '/delete',
+    method: (req: Request, res: Response) => deletePost(req, res),
+  },
+  {
+    path: '/delete/all',
+    method: (req: Request, res: Response) => deleteAllPosts(req, res),
+  },
+]
+
+postRoutes.map(route => {
   router.post(
+    route.path,
+    dynamicLimiter(60),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await route.method(req, res);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+});
+
+deleteRoutes.map(route => {
+  router.delete(
     route.path,
     dynamicLimiter(60),
     async (req: Request, res: Response, next: NextFunction) => {
