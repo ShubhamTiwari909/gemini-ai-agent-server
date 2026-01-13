@@ -52,7 +52,7 @@ app.use('/users', usersRoutes);
 app.use('/feed', feedRoutes);
 
 // Start the server
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = Number(process.env.PORT) || 5080;
 
 const startServer = async () => {
   try {
