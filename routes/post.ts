@@ -13,6 +13,8 @@ import {
   updateDownloads,
   updateCommentsToggle,
   updateDownloadToggle,
+  deleteComment,
+  deleteReply,
 } from '../controller/post/index.js';
 import { dynamicLimiter } from '../middlewares/rate-limiting.js';
 import { deleteAllPosts, deletePost } from '../controller/post/DeletePost.js';
@@ -87,6 +89,14 @@ const deleteRoutes = [
   {
     path: '/delete/all',
     method: (req: Request, res: Response) => deleteAllPosts(req, res),
+  },
+  {
+    path: '/delete/comment',
+    method: (req: Request, res: Response) => deleteComment(req, res),
+  },
+  {
+    path: '/delete/reply',
+    method: (req: Request, res: Response) => deleteReply(req, res),
   },
 ];
 

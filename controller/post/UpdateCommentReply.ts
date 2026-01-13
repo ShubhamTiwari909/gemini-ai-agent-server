@@ -34,7 +34,12 @@ export const addReply = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Post or comment not found' });
     }
 
-    res.status(200).json({ comments: updatedPost.comments });
+    res
+      .status(200)
+      .json({
+        comments: updatedPost.comments,
+        repliesLength: updatedPost.comments[updatedPost.comments.length - 1].replies.length,
+      });
   } catch (error) {
     console.error('Error adding reply:', error);
     res.status(500).json({ message: 'Server error' });
@@ -64,9 +69,38 @@ export const updateReplyLikes = async (req: Request, res: Response) => {
 
     await post.save();
 
-    return res.status(200).json({ comments: post.comments });
+    return res.status(200).json({ comments: post.comments, repliesLength: comment.replies.length });
   } catch (error) {
     console.error('Error adding comment:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const deleteReply = async (req: Request, res: Response) => {
+  const { postId, commentId, replyId } = req.body;
+
+  try {
+    const post = await Posts.findOne({ postId });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    const comment = post.comments.find(comment => comment.id === commentId);
+    if (!comment) return res.status(404).json({ message: 'Comment not found' });
+
+    const reply = comment.replies.find(reply => reply.id === replyId);
+    if (!reply) return res.status(404).json({ message: 'Reply not found' });
+
+    comment.replies.pull(reply);
+    await post.save();
+
+    return res
+      .status(200)
+      .json({
+        message: 'Reply deleted successfully',
+        comments: post.comments,
+        repliesLength: comment.replies.length,
+      });
+  } catch (error) {
+    console.error('Error deleting reply:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
